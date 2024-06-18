@@ -1,0 +1,21 @@
+services:
+  
+  SuareSu\PyrusClient\Transport\PyrusTransport:
+    class: SuareSu\PyrusClient\Transport\PyrusSymfonyHttpTransport
+
+  SuareSu\PyrusClient\Client\PyrusClientOptions:
+    class: SuareSu\PyrusClient\Client\PyrusClientOptions
+
+  SuareSu\PyrusClient\Client\PyrusClient:
+    class: SuareSu\PyrusClient\Client\PyrusClientImpl
+
+  SuareSu\PyrusClient\DataConverter\EntityConverter:
+    tags: 
+      - { name: 'serializer.normalizer', priority: -200 }
+      - { name: 'serializer.denormalizer', priority: -200 }
+
+  SuareSu\PyrusClient\DataConverter\PyrusDataConverter:
+    class: SuareSu\PyrusClient\DataConverter\PyrusDataConverterSymfonySerializer
+
+  SuareSu\PyrusClient\Gateway\PyrusGateway:
+    class: SuareSu\PyrusClient\Gateway\PyrusGatewayImpl
