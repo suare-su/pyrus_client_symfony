@@ -5,7 +5,8 @@
             "src"
         ],
         "excludes": [
-            "SuareSuPyrusClientSymfonyBundle.php"
+            "SuareSuPyrusClientSymfonyBundle.php",
+            "PyrusSerializer.php"
         ]
     },
     "logs": {
