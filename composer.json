@@ -15,7 +15,9 @@
     "phpunit/phpunit": "^10.0",
     "friendsofphp/php-cs-fixer": "^3.0",
     "vimeo/psalm": "^5.0",
-    "infection/infection": "^0.27"
+    "infection/infection": "^0.27",
+    "symfony/property-access": "^6.4|^7.0",
+    "nette/php-generator": "^4.1"
   },
   "autoload": {
     "psr-4": {
@@ -24,7 +26,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "SuareSu\\PyrusClientSymfony\\Tests\\": "tests/"
+      "SuareSu\\PyrusClientSymfony\\Tests\\": "tests/",
+      "SuareSu\\PyrusClientSymfony\\Scripts\\": "scripts/src/"
     }
   },
   "scripts": {
@@ -43,6 +46,10 @@
     ],
     "infection": [
       "vendor/bin/infection --min-msi=100 --min-covered-msi=100 --threads=4"
+    ],
+    "generate_serializer": [
+      "php scripts/generate_serializer.php",
+      "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php -v --allow-risky=yes"
     ]
   },
   "config": {

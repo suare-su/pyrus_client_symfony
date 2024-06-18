@@ -9,7 +9,7 @@ services:
   SuareSu\PyrusClient\Client\PyrusClient:
     class: SuareSu\PyrusClient\Client\PyrusClientImpl
 
-  SuareSu\PyrusClient\DataConverter\EntityConverter:
+  SuareSu\PyrusClientSymfony\PyrusSerializer:
     tags: 
       - { name: 'serializer.normalizer', priority: -200 }
       - { name: 'serializer.denormalizer', priority: -200 }
