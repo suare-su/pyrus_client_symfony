@@ -1,7 +1,7 @@
 services:
   
   SuareSu\PyrusClient\Transport\PyrusTransport:
-    class: SuareSu\PyrusClient\Transport\PyrusSymfonyHttpTransport
+    class: SuareSu\PyrusClientSymfony\PyrusSymfonyHttpTransport
 
   SuareSu\PyrusClient\Client\PyrusClientOptions:
     class: SuareSu\PyrusClient\Client\PyrusClientOptions
