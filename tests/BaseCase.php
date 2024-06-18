@@ -11,6 +11,8 @@ use PHPUnit\Framework\TestCase;
  * Base test case for all tests.
  *
  * @internal
+ *
+ * @psalm-api
  */
 abstract class BaseCase extends TestCase
 {
