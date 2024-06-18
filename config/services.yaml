@@ -15,7 +15,7 @@ services:
       - { name: 'serializer.denormalizer', priority: -200 }
 
   SuareSu\PyrusClient\DataConverter\PyrusDataConverter:
-    class: SuareSu\PyrusClient\DataConverter\PyrusDataConverterSymfonySerializer
+    class: SuareSu\PyrusClientSymfony\PyrusDataConverterSymfonySerializer
 
   SuareSu\PyrusClient\Gateway\PyrusGateway:
     class: SuareSu\PyrusClient\Gateway\PyrusGatewayImpl
