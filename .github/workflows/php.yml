@@ -104,3 +104,6 @@ jobs:
       - name: Check that gateway is registered
         run: |
           $SYMFONY_FOLDER/bin/console debug:container "SuareSu\\PyrusClient\\Gateway\\PyrusGateway"
+      - name: Lint container
+        run: |
+          $SYMFONY_FOLDER/bin/console lint:container
