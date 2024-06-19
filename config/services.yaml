@@ -2,12 +2,17 @@ services:
   
   SuareSu\PyrusClient\Transport\PyrusTransport:
     class: SuareSu\PyrusClientSymfony\PyrusSymfonyHttpTransport
+    arguments:
+      - '@http_client'
 
   SuareSu\PyrusClient\Client\PyrusClientOptions:
     class: SuareSu\PyrusClient\Client\PyrusClientOptions
 
   SuareSu\PyrusClient\Client\PyrusClient:
     class: SuareSu\PyrusClient\Client\PyrusClientImpl
+    arguments:
+      - '@SuareSu\PyrusClient\Transport\PyrusTransport'
+      - '@SuareSu\PyrusClient\Client\PyrusClientOptions'
 
   SuareSu\PyrusClientSymfony\PyrusSerializer:
     tags: 
@@ -16,6 +21,12 @@ services:
 
   SuareSu\PyrusClient\DataConverter\PyrusDataConverter:
     class: SuareSu\PyrusClientSymfony\PyrusDataConverterSymfonySerializer
+    arguments:
+      - '@serializer'
+      - '@serializer'
 
   SuareSu\PyrusClient\Gateway\PyrusGateway:
     class: SuareSu\PyrusClient\Gateway\PyrusGatewayImpl
+    arguments:
+      - '@SuareSu\PyrusClient\Client\PyrusClient'
+      - '@SuareSu\PyrusClient\DataConverter\PyrusDataConverter'
