@@ -19,7 +19,7 @@ final class PyrusDataConverterSymfonySerializer implements PyrusDataConverter
 {
     public function __construct(
         private readonly NormalizerInterface $normalizer,
-        private readonly DenormalizerInterface $denormalizer
+        private readonly DenormalizerInterface $denormalizer,
     ) {
     }
 

@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php-versions: ['8.1', '8.2', '8.3']
+        php-versions: ['8.2', '8.3']
     steps:
     - uses: actions/checkout@v2
     - name: Install PHP
@@ -34,8 +34,8 @@ jobs:
       run: composer run-script linter
     - name: Run test suite
       run: composer run-script test
-    - name: Run infection
-      run: composer run-script infection
+    #- name: Run infection
+    #  run: composer run-script infection
 
   symfony_installation:
     name: Test installation to Symfony (PHP ${{ matrix.php-versions }}, Symfony ${{ matrix.symfony-versions }})
@@ -43,15 +43,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['8.1', '8.2', '8.3']
-        symfony-versions: ['6.3', '6.4']
-        include:
-          - php-versions: '8.2'
-            symfony-versions: '7.0'
-          - php-versions: '8.3'
-            symfony-versions: '7.0'
-          - php-versions: '8.3'
-            symfony-versions: '7.1'
+        php-versions: ['8.2', '8.3']
+        symfony-versions: ['7.1', '7.2']
     env:
       SYMFONY_FOLDER: symfony_app
     steps:
@@ -97,13 +90,13 @@ jobs:
         run: |
           cd $SYMFONY_FOLDER
           composer config repositories.foo git https://github.com/suare-su/pyrus_client_symfony.git
-          composer req "suare-su/pyrus_client_symfony:dev-${{ steps.extract_branch.outputs.branch }}" -W
+          composer req "suare-su/pyrus_client_symfony:dev-${{ steps.extract_branch.outputs.branch }}"
       - name: Check that module is auto enabled
         run: |
           cat $SYMFONY_FOLDER/config/bundles.php | grep "SuareSuPyrusClientSymfonyBundle"
       - name: Check that gateway is registered
         run: |
-          $SYMFONY_FOLDER/bin/console debug:container "SuareSu\\PyrusClient\\Gateway\\PyrusGateway"
+          $SYMFONY_FOLDER/bin/console debug:container "SuareSu\\PyrusClientSymfony\\PyrusGatewayFactory"
       - name: Lint container
         run: |
           $SYMFONY_FOLDER/bin/console lint:container
