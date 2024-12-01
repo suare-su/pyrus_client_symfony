@@ -90,7 +90,7 @@ jobs:
         run: |
           cd $SYMFONY_FOLDER
           composer config repositories.foo git https://github.com/suare-su/pyrus_client_symfony.git
-          composer req "suare-su/pyrus_client_symfony:dev-${{ steps.extract_branch.outputs.branch }}" -W
+          composer req "suare-su/pyrus_client_symfony:dev-${{ steps.extract_branch.outputs.branch }}" -W --no-dev
       - name: Check that module is auto enabled
         run: |
           cat $SYMFONY_FOLDER/config/bundles.php | grep "SuareSuPyrusClientSymfonyBundle"
