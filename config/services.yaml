@@ -21,6 +21,7 @@ services:
 
   Marvin255\InMemoryCache\InMemoryCache:
     class: Marvin255\InMemoryCache\InMemoryCache
+    public: false
     arguments:
       - 10
       - 60
@@ -28,6 +29,7 @@ services:
 
   SuareSu\PyrusClientSymfony\PyrusGatewayFactoryImpl:
     class: SuareSu\PyrusClientSymfony\PyrusGatewayFactoryImpl
+    public: false
     arguments:
       - '@SuareSu\PyrusClient\Transport\PyrusTransport'
       - '@SuareSu\PyrusClient\DataConverter\PyrusDataConverter'
@@ -35,6 +37,7 @@ services:
 
   SuareSu\PyrusClientSymfony\PyrusGatewayFactoryCache:
     class: SuareSu\PyrusClientSymfony\PyrusGatewayFactoryCache
+    public: false
     arguments:
       - '@SuareSu\PyrusClientSymfony\PyrusGatewayFactoryImpl'
       - '@Marvin255\InMemoryCache\InMemoryCache'

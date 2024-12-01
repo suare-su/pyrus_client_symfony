@@ -20,7 +20,7 @@ final class PyrusGatewayFactoryCache implements PyrusGatewayFactory
 {
     public function __construct(
         private readonly PyrusGatewayFactory $innerFactory,
-        private readonly CacheInterface $cache
+        private readonly CacheInterface $cache,
     ) {
     }
 

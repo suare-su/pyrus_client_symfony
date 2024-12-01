@@ -43,28 +43,28 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
     /**
      * {@inheritDoc}
      */
-    public function normalize(mixed $object, ?string $format = null, array $context = []): array
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array
     {
-        if ($object instanceof PrintForm) {
-            return $this->normalizePrintForm($object);
-        } elseif ($object instanceof Form) {
-            return $this->normalizeForm($object);
-        } elseif ($object instanceof FormField) {
-            return $this->normalizeFormField($object);
-        } elseif ($object instanceof CatalogUpdate) {
-            return $this->normalizeCatalogUpdate($object);
-        } elseif ($object instanceof CatalogItem) {
-            return $this->normalizeCatalogItem($object);
-        } elseif ($object instanceof CatalogCreate) {
-            return $this->normalizeCatalogCreate($object);
-        } elseif ($object instanceof Catalog) {
-            return $this->normalizeCatalog($object);
-        } elseif ($object instanceof CatalogHeader) {
-            return $this->normalizeCatalogHeader($object);
-        } elseif ($object instanceof CatalogItemCreate) {
-            return $this->normalizeCatalogItemCreate($object);
-        } elseif ($object instanceof CatalogUpdateResponse) {
-            return $this->normalizeCatalogUpdateResponse($object);
+        if ($data instanceof PrintForm) {
+            return $this->normalizePrintForm($data);
+        } elseif ($data instanceof Form) {
+            return $this->normalizeForm($data);
+        } elseif ($data instanceof FormField) {
+            return $this->normalizeFormField($data);
+        } elseif ($data instanceof CatalogUpdate) {
+            return $this->normalizeCatalogUpdate($data);
+        } elseif ($data instanceof CatalogItem) {
+            return $this->normalizeCatalogItem($data);
+        } elseif ($data instanceof CatalogCreate) {
+            return $this->normalizeCatalogCreate($data);
+        } elseif ($data instanceof Catalog) {
+            return $this->normalizeCatalog($data);
+        } elseif ($data instanceof CatalogHeader) {
+            return $this->normalizeCatalogHeader($data);
+        } elseif ($data instanceof CatalogItemCreate) {
+            return $this->normalizeCatalogItemCreate($data);
+        } elseif ($data instanceof CatalogUpdateResponse) {
+            return $this->normalizeCatalogUpdateResponse($data);
         }
 
         throw new InvalidArgumentException("Can't normalize provided data");

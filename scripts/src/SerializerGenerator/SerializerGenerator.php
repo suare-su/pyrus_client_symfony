@@ -150,8 +150,8 @@ final class SerializerGenerator
     {
         $conditions = array_map(
             fn (ClassDescription $d): string => PhpLineHelper::if(
-                '$object instanceof ' . $d->shortClassName,
-                PhpLineHelper::return('$this->normalize' . $d->shortClassName . '($object)')
+                '$data instanceof ' . $d->shortClassName,
+                PhpLineHelper::return('$this->normalize' . $d->shortClassName . '($data)')
             ),
             $descriptions
         );
@@ -165,7 +165,7 @@ final class SerializerGenerator
             ->setVisibility('public')
             ->setBody($body);
 
-        $method->addParameter('object')->setType('mixed');
+        $method->addParameter('data')->setType('mixed');
         $method->addParameter('format', new Literal('null'))->setNullable()->setType('string');
         $method->addParameter('context', new Literal('[]'))->setType('array');
     }
