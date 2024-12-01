@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SuareSu\PyrusClientSymfony;
 
-use Marvin255\InMemoryCache\InMemoryCache;
+use Psr\SimpleCache\CacheInterface;
 use SuareSu\PyrusClient\Client\PyrusClientOptions;
 use SuareSu\PyrusClient\Client\PyrusCredentials;
 use SuareSu\PyrusClient\Gateway\PyrusGateway;
@@ -20,7 +20,7 @@ final class PyrusGatewayFactoryCache implements PyrusGatewayFactory
 {
     public function __construct(
         private readonly PyrusGatewayFactory $innerFactory,
-        private readonly InMemoryCache $cache
+        private readonly CacheInterface $cache
     ) {
     }
 
