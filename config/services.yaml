@@ -8,12 +8,6 @@ services:
   SuareSu\PyrusClient\Client\PyrusClientOptions:
     class: SuareSu\PyrusClient\Client\PyrusClientOptions
 
-  SuareSu\PyrusClient\Client\PyrusClient:
-    class: SuareSu\PyrusClient\Client\PyrusClientImpl
-    arguments:
-      - '@SuareSu\PyrusClient\Transport\PyrusTransport'
-      - '@SuareSu\PyrusClient\Client\PyrusClientOptions'
-
   SuareSu\PyrusClientSymfony\PyrusSerializer:
     tags: 
       - { name: 'serializer.normalizer', priority: -200 }
@@ -25,8 +19,25 @@ services:
       - '@serializer'
       - '@serializer'
 
-  SuareSu\PyrusClient\Gateway\PyrusGateway:
-    class: SuareSu\PyrusClient\Gateway\PyrusGatewayImpl
+  Marvin255\InMemoryCache\InMemoryCache:
+    class: Marvin255\InMemoryCache\InMemoryCache
     arguments:
-      - '@SuareSu\PyrusClient\Client\PyrusClient'
+      - 10
+      - 60
+      - '@clock'
+
+  SuareSu\PyrusClientSymfony\PyrusGatewayFactoryImpl:
+    class: SuareSu\PyrusClientSymfony\PyrusGatewayFactoryImpl
+    arguments:
+      - '@SuareSu\PyrusClient\Transport\PyrusTransport'
       - '@SuareSu\PyrusClient\DataConverter\PyrusDataConverter'
+      - '@SuareSu\PyrusClient\Client\PyrusClientOptions'
+
+  SuareSu\PyrusClientSymfony\PyrusGatewayFactoryCache:
+    class: SuareSu\PyrusClientSymfony\PyrusGatewayFactoryCache
+    arguments:
+      - '@SuareSu\PyrusClientSymfony\PyrusGatewayFactoryImpl'
+      - '@Marvin255\InMemoryCache\InMemoryCache'
+
+  SuareSu\PyrusClientSymfony\PyrusGatewayFactory:
+    alias: 'SuareSu\PyrusClientSymfony\PyrusGatewayFactoryCache'

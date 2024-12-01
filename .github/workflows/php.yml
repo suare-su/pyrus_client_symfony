@@ -103,7 +103,7 @@ jobs:
           cat $SYMFONY_FOLDER/config/bundles.php | grep "SuareSuPyrusClientSymfonyBundle"
       - name: Check that gateway is registered
         run: |
-          $SYMFONY_FOLDER/bin/console debug:container "SuareSu\\PyrusClientSymfony\\PyrusSymfonyHttpTransport"
+          $SYMFONY_FOLDER/bin/console debug:container "SuareSu\\PyrusClientSymfony\\PyrusGatewayFactory"
       - name: Lint container
         run: |
           $SYMFONY_FOLDER/bin/console lint:container
