@@ -10,7 +10,7 @@
     "symfony/serializer": "^6.0|^7.0",
     "symfony/http-client": "^6.0|^7.0",
     "symfony/framework-bundle": "^6.0|^7.0",
-    "symfony/clock": "^6.0|^7.0",
+    "symfony/clock": "^7.2",
     "marvin255/in-memory-cache": "^2.3"
   },
   "require-dev": {
