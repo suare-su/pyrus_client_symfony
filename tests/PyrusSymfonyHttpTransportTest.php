@@ -78,7 +78,7 @@ final class PyrusSymfonyHttpTransportTest extends BaseCase
                 new PyrusRequest(PyrusRequestMethod::POST, $url, $payload),
                 null,
                 [
-                    'body' => $payload,
+                    'json' => $payload,
                 ],
                 200,
                 'test content',
