@@ -39,7 +39,7 @@ final class PyrusSymfonyHttpTransport implements PyrusTransport
         if (PyrusRequestMethod::GET === $request->method) {
             $symfonyOptions['query'] = $request->payload;
         } else {
-            $symfonyOptions['body'] = $request->payload;
+            $symfonyOptions['json'] = $request->payload;
         }
 
         if (null !== $options) {
