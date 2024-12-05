@@ -44,10 +44,6 @@ final class PyrusSymfonyHttpTransport implements PyrusTransport
 
         if (null !== $options) {
             $symfonyOptions['max_duration'] = $options->timeout;
-            $symfonyOptions['retry_failed'] = [
-                'max_retries' => $options->maxRetries,
-                'delay' => $options->retryDelay,
-            ];
         }
 
         $response = $this->symfonyTransport->request(
