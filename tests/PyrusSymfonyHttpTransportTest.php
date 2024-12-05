@@ -70,10 +70,6 @@ final class PyrusSymfonyHttpTransportTest extends BaseCase
                     'headers' => $headers,
                     'query' => $payload,
                     'max_duration' => PyrusClientOptions::DEFAULT_TIMEOUT,
-                    'retry_failed' => [
-                        'max_retries' => PyrusClientOptions::DEFAULT_MAX_RETRIES,
-                        'delay' => PyrusClientOptions::DEFAULT_RETRY_DELAY,
-                    ],
                 ],
                 200,
                 'test content',
