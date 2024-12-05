@@ -63,6 +63,20 @@ final class PyrusSymfonyHttpTransportTest extends BaseCase
                 200,
                 'test content',
             ],
+            'get request with null payload' => [
+                new PyrusRequest(PyrusRequestMethod::GET, $url, null),
+                null,
+                [],
+                200,
+                'test content',
+            ],
+            'get request with empty array payload' => [
+                new PyrusRequest(PyrusRequestMethod::GET, $url, []),
+                null,
+                [],
+                200,
+                'test content',
+            ],
             'get request with options' => [
                 new PyrusRequest(PyrusRequestMethod::GET, $url, $payload, $headers),
                 new PyrusClientOptions(),
@@ -80,6 +94,20 @@ final class PyrusSymfonyHttpTransportTest extends BaseCase
                 [
                     'json' => $payload,
                 ],
+                200,
+                'test content',
+            ],
+            'post request with null payload' => [
+                new PyrusRequest(PyrusRequestMethod::POST, $url, null),
+                null,
+                [],
+                200,
+                'test content',
+            ],
+            'post request with empty array payload' => [
+                new PyrusRequest(PyrusRequestMethod::POST, $url, []),
+                null,
+                [],
                 200,
                 'test content',
             ],
