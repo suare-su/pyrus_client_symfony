@@ -19,7 +19,11 @@
     "vimeo/psalm": "^5.0",
     "infection/infection": "^0.27",
     "symfony/property-access": "^7.0",
-    "nette/php-generator": "^4.1"
+    "nette/php-generator": "^4.1",
+    "symfony/form": "^7.2"
+  },
+  "suggest": {
+    "symfony/form": "Needed to convert Pyrus forms to Symfony forms"
   },
   "autoload": {
     "psr-4": {
