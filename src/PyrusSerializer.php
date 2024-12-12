@@ -13,6 +13,7 @@ use SuareSu\PyrusClient\Entity\Catalog\CatalogUpdate;
 use SuareSu\PyrusClient\Entity\Catalog\CatalogUpdateResponse;
 use SuareSu\PyrusClient\Entity\Form\Form;
 use SuareSu\PyrusClient\Entity\Form\FormField;
+use SuareSu\PyrusClient\Entity\Form\FormFieldType;
 use SuareSu\PyrusClient\Entity\Form\PrintForm;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -171,7 +172,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
     {
         return [
             'id' => $object->id,
-            'type' => $object->type,
+            'type' => $object->type->value,
             'name' => $object->name,
             'tooltip' => $object->tooltip,
             'info' => $object->info,
@@ -276,7 +277,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
     {
         return new FormField(
             (int) ($data['id'] ?? 0),
-            (string) ($data['type'] ?? ''),
+            FormFieldType::from((string) ($data['type'] ?? '')),
             (string) ($data['name'] ?? ''),
             (string) ($data['tooltip'] ?? ''),
             (array) ($data['info'] ?? []),
