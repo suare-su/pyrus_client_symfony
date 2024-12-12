@@ -7,6 +7,7 @@ namespace SuareSu\PyrusClientSymfony\Scripts\SerializerGenerator;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpFile;
+use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\PsrPrinter;
 use SuareSu\PyrusClientSymfony\Scripts\DTO\ClassDescription;
 use SuareSu\PyrusClientSymfony\Scripts\Helper\CaseHelper;
@@ -115,7 +116,7 @@ final class SerializerGenerator
         }
 
         foreach ($descriptions as $description) {
-            $this->addEntityDenormalize($class, $description, $descriptions);
+            $this->addEntityDenormalize($ns, $class, $description, $descriptions);
         }
 
         return $phpFile;
@@ -181,6 +182,8 @@ final class SerializerGenerator
                 continue;
             }
             $type = $definition[0];
+            /** @psalm-var class-string|null */
+            $className = $type->getClassName();
             $propertyKey = CaseHelper::camelToSnake($property);
             if ($type->isCollection()) {
                 $valueType = $type->getCollectionValueTypes()[0] ?? null;
@@ -193,6 +196,8 @@ final class SerializerGenerator
                 } else {
                     $propertyValue = "\$object->{$property}";
                 }
+            } elseif (null !== $className && (new \ReflectionClass($className))->isEnum()) {
+                $propertyValue = "\$object->{$property}->value";
             } else {
                 $propertyValue = "\$object->{$property}";
             }
@@ -272,7 +277,7 @@ final class SerializerGenerator
     /**
      * @param array<string, ClassDescription> $descriptions
      */
-    private function addEntityDenormalize(ClassType $class, ClassDescription $description, array $descriptions): void
+    private function addEntityDenormalize(PhpNamespace $ns, ClassType $class, ClassDescription $description, array $descriptions): void
     {
         $body = PhpLineHelper::NEW_LINE;
         foreach ($description->properties as $property => $definition) {
@@ -280,6 +285,8 @@ final class SerializerGenerator
                 continue;
             }
             $type = $definition[0];
+            /** @psalm-var class-string|null */
+            $className = $type->getClassName();
             $propertyKey = CaseHelper::camelToSnake($property);
             $propertyValue = null;
             $builtInType = $type->getBuiltinType();
@@ -301,6 +308,9 @@ final class SerializerGenerator
             } elseif (\in_array($builtInType, self::SCALAR_TYPES)) {
                 $default = self::SCALAR_TYPES_DEFAULTS[$builtInType];
                 $propertyValue = "($builtInType) (\$data['{$propertyKey}'] ?? {$default})";
+            } elseif (null !== $className && (new \ReflectionClass($className))->isEnum()) {
+                $ns->addUse($className);
+                $propertyValue = "\\{$className}::from((string) (\$data['{$propertyKey}'] ?? ''))";
             }
             if (null !== $propertyValue) {
                 $body .= PhpLineHelper::line($propertyValue, 1, false) . PhpLineHelper::COMMA . PhpLineHelper::NEW_LINE;
