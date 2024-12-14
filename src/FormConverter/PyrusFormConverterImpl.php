@@ -6,6 +6,7 @@ namespace SuareSu\PyrusClientSymfony\FormConverter;
 
 use SuareSu\PyrusClient\Entity\Form\Form;
 use SuareSu\PyrusClient\Entity\Form\FormField;
+use SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverter;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 

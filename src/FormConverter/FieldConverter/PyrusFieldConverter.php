@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SuareSu\PyrusClientSymfony\FormConverter;
+namespace SuareSu\PyrusClientSymfony\FormConverter\FieldConverter;
 
 use SuareSu\PyrusClient\Entity\Form\Form;
 use SuareSu\PyrusClient\Entity\Form\FormField;

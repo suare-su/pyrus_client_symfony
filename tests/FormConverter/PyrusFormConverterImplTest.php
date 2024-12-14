@@ -4,21 +4,17 @@ declare(strict_types=1);
 
 namespace SuareSu\PyrusClientSymfony\Tests\FormConverter;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use SuareSu\PyrusClient\Entity\Form\Form;
 use SuareSu\PyrusClient\Entity\Form\FormField;
-use SuareSu\PyrusClient\Entity\Form\FormFieldType;
-use SuareSu\PyrusClientSymfony\FormConverter\PyrusFieldConverter;
+use SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverter;
 use SuareSu\PyrusClientSymfony\FormConverter\PyrusFormConverterImpl;
-use SuareSu\PyrusClientSymfony\Tests\BaseCase;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormFactoryInterface;
+use SuareSu\PyrusClientSymfony\Tests\BaseCasePyrusForm;
 use Symfony\Component\Form\FormInterface;
 
 /**
  * @internal
  */
-final class PyrusFormConverterImplTest extends BaseCase
+final class PyrusFormConverterImplTest extends BaseCasePyrusForm
 {
     /**
      * @test
@@ -142,61 +138,5 @@ final class PyrusFormConverterImplTest extends BaseCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage($pyrusField->name);
         $formConverted->convert($pyrusForm);
-    }
-
-    /**
-     * Create mock for Symfony form builder.
-     *
-     * @return FormBuilderInterface&MockObject
-     */
-    private function createSymfonyFormBuilderMock(FormInterface $form): FormBuilderInterface
-    {
-        $builder = $this->mock(FormBuilderInterface::class);
-        $builder->expects($this->any())->method('getFOrm')->willReturn($form);
-
-        return $builder;
-    }
-
-    /**
-     * Create mock for Symfony form factory.
-     *
-     * @return FormFactoryInterface&MockObject
-     */
-    private function createSymfonyFormFactoryMock(FormBuilderInterface $builder): FormFactoryInterface
-    {
-        $formFactory = $this->mock(FormFactoryInterface::class);
-        $formFactory->expects($this->any())->method('createBuilder')->willReturn($builder);
-
-        return $formFactory;
-    }
-
-    /**
-     * Create mock for pyrus form.
-     *
-     * @param array<FormField>|FormField $fields
-     */
-    private function createPyrusFormMock(array|FormField $fields = []): Form
-    {
-        $fields = \is_array($fields) ? $fields : [$fields];
-
-        return new Form(
-            id: 123,
-            name: 'form',
-            deletedOrClosed: false,
-            fields: $fields
-        );
-    }
-
-    /**
-     * Create mock for pyrus form field.
-     */
-    private function createPyrusFieldMock(): FormField
-    {
-        return new FormField(
-            321,
-            FormFieldType::DATE,
-            'test_field',
-            'test lable'
-        );
     }
 }
