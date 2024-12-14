@@ -25,6 +25,7 @@ class SuareSuPyrusClientSymfonyBundle extends AbstractBundle
     {
         $container->import(self::SERVICES_YAML);
         $bundles = $builder->getParameter('kernel.bundles');
+        var_dump($bundles);
         if (\is_array($bundles) && isset($bundles['form'])) {
             $container->import(self::FORM_CONVERTER_SERVICES_YAML);
         }
