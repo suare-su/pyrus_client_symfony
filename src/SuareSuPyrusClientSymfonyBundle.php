@@ -15,8 +15,8 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
  */
 class SuareSuPyrusClientSymfonyBundle extends AbstractBundle
 {
-    private const SERVICES_YAML = '../config/services.yaml';
-    private const FORM_CONVERTER_SERVICES_YAML = '../config/form_converter_services.yaml';
+    private const SERVICES_YAML = __DIR__ . '/../config/services.yaml';
+    private const FORM_CONVERTER_SERVICES_YAML = __DIR__ . '/../config/form_converter_services.yaml';
 
     /**
      * {@inheritdoc}
@@ -24,9 +24,17 @@ class SuareSuPyrusClientSymfonyBundle extends AbstractBundle
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $container->import(self::SERVICES_YAML);
-        if ($builder->hasExtension('form')) {
-            $container->import(self::FORM_CONVERTER_SERVICES_YAML);
-        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+        $container->addCompilerPass(
+            new SuareSuPyrusClientSymfonyCheckFormComponentPass(self::FORM_CONVERTER_SERVICES_YAML)
+        );
     }
 
     /**
