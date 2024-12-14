@@ -7,22 +7,32 @@ namespace SuareSu\PyrusClientSymfony\FormConverter\FieldConverter;
 use SuareSu\PyrusClient\Entity\Form\Form;
 use SuareSu\PyrusClient\Entity\Form\FormField;
 use SuareSu\PyrusClient\Entity\Form\FormFieldType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Converter for the due date time field.
+ * Converter fthat ignores some fields.
  *
  * @psalm-api
  */
-final class PyrusFieldConverterDueDateTime implements PyrusFieldConverter
+final class PyrusFieldConverterIgnore implements PyrusFieldConverter
 {
     /**
      * {@inheritdoc}
      */
     public function supportsConversion(Form $pyrusForm, FormField $field): bool
     {
-        return FormFieldType::DUE_DATE_TIME === $field->type;
+        return \in_array(
+            $field->type,
+            [
+                FormFieldType::AUTHOR,
+                FormFieldType::CREATION_DATE,
+                FormFieldType::NOTE,
+                FormFieldType::PROJECT,
+                FormFieldType::STATUS,
+                FormFieldType::STEP,
+            ],
+            true
+        );
     }
 
     /**
@@ -30,13 +40,5 @@ final class PyrusFieldConverterDueDateTime implements PyrusFieldConverter
      */
     public function convert(Form $pyrusForm, FormField $field, FormBuilderInterface $builder): void
     {
-        $options = PyrusFieldConverterHelper::getDefaultOptions($field);
-        $options['format'] = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-
-        $builder->add(
-            PyrusFieldConverterHelper::getHtmlName($field),
-            DateTimeType::class,
-            $options
-        );
     }
 }
