@@ -55,4 +55,26 @@ final class PyrusFieldConverterHelperTest extends BaseCasePyrusForm
             $res
         );
     }
+
+    /**
+     * @test
+     */
+    public function testGetDefaultOptionsWithCustomType(): void
+    {
+        $customType = 'custom_type';
+        $name = 'test name for label';
+        $field = $this->createPyrusFieldMock(['name' => $name]);
+
+        $res = PyrusFieldConverterHelper::getDefaultOptions($field, $customType);
+
+        $this->assertSame(
+            [
+                'label' => $name,
+                'attr' => [
+                    'data-type' => $customType,
+                ],
+            ],
+            $res
+        );
+    }
 }

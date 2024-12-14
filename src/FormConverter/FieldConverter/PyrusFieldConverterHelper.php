@@ -42,10 +42,18 @@ final class PyrusFieldConverterHelper
      *
      * @return array<string, mixed>
      */
-    public static function getDefaultOptions(FormField $field): array
+    public static function getDefaultOptions(FormField $field, ?string $customType = null): array
     {
-        return [
+        $res = [
             'label' => self::getHtmlLabel($field),
         ];
+
+        if (null !== $customType) {
+            $res['attr'] = [
+                'data-type' => $customType,
+            ];
+        }
+
+        return $res;
     }
 }
