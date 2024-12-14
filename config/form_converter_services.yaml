@@ -1,0 +1,55 @@
+services:
+
+  SuareSu\PyrusClientSymfony\FormConverter\PyrusFormConverter:
+    class: SuareSu\PyrusClientSymfony\FormConverter\PyrusFormConverterImpl
+    arguments:
+      - '@form.factory'
+      - !tagged_iterator pyrus_client_symfony.field_converter
+
+  SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterCheckMark:
+    tags: 
+      - { name: 'pyrus_client_symfony.field_converter', priority: 2000 }
+
+  SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterDate:
+    tags: 
+      - { name: 'pyrus_client_symfony.field_converter', priority: 2000 }
+
+  SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterDueDateTime:
+    tags: 
+      - { name: 'pyrus_client_symfony.field_converter', priority: 2000 }
+
+  SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterEmail:
+    tags: 
+      - { name: 'pyrus_client_symfony.field_converter', priority: 2000 }
+
+  SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterFile:
+    tags: 
+      - { name: 'pyrus_client_symfony.field_converter', priority: 2000 }
+
+  SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterIgnore:
+    tags: 
+      - { name: 'pyrus_client_symfony.field_converter', priority: 2000 }
+
+  SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterMoney:
+    tags: 
+      - { name: 'pyrus_client_symfony.field_converter', priority: 2000 }
+
+  SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterNumber:
+    tags: 
+      - { name: 'pyrus_client_symfony.field_converter', priority: 2000 }
+
+  SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterPhone:
+    tags: 
+      - { name: 'pyrus_client_symfony.field_converter', priority: 2000 }
+
+  SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterText:
+    tags: 
+      - { name: 'pyrus_client_symfony.field_converter', priority: 2000 }
+
+  SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterTextMultipleChoice:
+    tags: 
+      - { name: 'pyrus_client_symfony.field_converter', priority: 2000 }
+
+  SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterTime:
+    tags: 
+      - { name: 'pyrus_client_symfony.field_converter', priority: 2000 }
