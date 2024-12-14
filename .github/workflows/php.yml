@@ -86,6 +86,10 @@ jobs:
           echo "APP_SECRET=test" >> $SYMFONY_FOLDER/.env
           echo "DATABASE_URL=mysql://test:test@127.0.0.1:3306/test?serverVersion=5.7" >> $SYMFONY_FOLDER/.env
           echo "MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=0" >> $SYMFONY_FOLDER/.env
+      - name: Install form module
+        run: |
+          cd $SYMFONY_FOLDER
+          composer req symfony/form
       - name: Install module
         run: |
           cd $SYMFONY_FOLDER
@@ -94,9 +98,12 @@ jobs:
       - name: Check that module is auto enabled
         run: |
           cat $SYMFONY_FOLDER/config/bundles.php | grep "SuareSuPyrusClientSymfonyBundle"
-      - name: Check that gateway is registered
+      - name: Check that gateway factory is registered
         run: |
           $SYMFONY_FOLDER/bin/console debug:container "SuareSu\\PyrusClientSymfony\\PyrusGatewayFactory"
+      - name: Check that form converter is registered
+        run: |
+          $SYMFONY_FOLDER/bin/console debug:container "SuareSu\\PyrusClientSymfony\\FormConverter\\PyrusFormConverter"
       - name: Lint container
         run: |
           $SYMFONY_FOLDER/bin/console lint:container

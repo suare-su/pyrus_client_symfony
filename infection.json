@@ -6,6 +6,7 @@
         ],
         "excludes": [
             "SuareSuPyrusClientSymfonyBundle.php",
+            "SuareSuPyrusClientSymfonyCheckFormComponentPass.php",
             "PyrusSerializer.php"
         ]
     },
