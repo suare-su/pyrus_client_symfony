@@ -31,5 +31,7 @@ final class PyrusGatewayFactoryImplTest extends BaseCase
         $res = $factory->createGateway($credentials);
 
         $this->assertInstanceOf(PyrusGateway::class, $res);
+        $this->assertSame($defaultOptions, $res->getClient()->getOptions());
+        $this->assertTrue($res->getClient()->hasCredentials());
     }
 }
