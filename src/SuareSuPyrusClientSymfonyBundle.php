@@ -24,7 +24,7 @@ class SuareSuPyrusClientSymfonyBundle extends AbstractBundle
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $container->import(self::SERVICES_YAML);
-        if ($container->hasExtension('form')) {
+        if ($builder->hasExtension('form')) {
             $container->import(self::FORM_CONVERTER_SERVICES_YAML);
         }
     }
