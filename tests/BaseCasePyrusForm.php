@@ -25,6 +25,7 @@ abstract class BaseCasePyrusForm extends BaseCase
      * Create mock for pyrus form field.
      *
      * @psalm-suppress MixedArgument
+     * @psalm-suppress MixedArgumentTypeCoercion
      */
     protected function createPyrusFieldMock(array $params = []): FormField
     {
@@ -32,7 +33,8 @@ abstract class BaseCasePyrusForm extends BaseCase
             (int) ($params['id'] ?? 123),
             $params['type'] ?? FormFieldType::TEXT,
             (string) ($params['name'] ?? 'test name'),
-            'test tooltip'
+            'test tooltip',
+            (array) ($params['info'] ?? [])
         );
     }
 
