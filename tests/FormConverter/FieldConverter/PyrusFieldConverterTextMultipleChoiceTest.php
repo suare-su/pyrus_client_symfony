@@ -34,7 +34,7 @@ final class PyrusFieldConverterTextMultipleChoiceTest extends BaseCasePyrusForm
     public static function provideSupportsConversion(): array
     {
         return [
-            'number type' => [
+            'multiple choice type' => [
                 FormFieldType::MULTIPLE_CHOICE,
                 true,
             ],

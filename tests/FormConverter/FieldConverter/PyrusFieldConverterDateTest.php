@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace SuareSu\PyrusClientSymfony\Tests\FormConverter\FieldConverter;
 
 use SuareSu\PyrusClient\Entity\Form\FormFieldType;
-use SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterFile;
+use SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterDate;
 use SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterHelper;
 use SuareSu\PyrusClientSymfony\Tests\BaseCasePyrusForm;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 /**
  * @internal
  */
-final class PyrusFieldConverterFileTest extends BaseCasePyrusForm
+final class PyrusFieldConverterDateTest extends BaseCasePyrusForm
 {
     /**
      * @test
@@ -25,7 +25,7 @@ final class PyrusFieldConverterFileTest extends BaseCasePyrusForm
         $field = $this->createPyrusFieldMock(['type' => $type]);
         $form = $this->createPyrusFormMock($field);
 
-        $converter = new PyrusFieldConverterFile();
+        $converter = new PyrusFieldConverterDate();
         $res = $converter->supportsConversion($form, $field);
 
         $this->assertSame($expected, $res);
@@ -34,8 +34,12 @@ final class PyrusFieldConverterFileTest extends BaseCasePyrusForm
     public static function provideSupportsConversion(): array
     {
         return [
-            'file type' => [
-                FormFieldType::FILE,
+            'date type' => [
+                FormFieldType::DATE,
+                true,
+            ],
+            'dur date type' => [
+                FormFieldType::DUE_DATE,
                 true,
             ],
             'other types' => [
@@ -52,22 +56,25 @@ final class PyrusFieldConverterFileTest extends BaseCasePyrusForm
     {
         $field = $this->createPyrusFieldMock(
             [
-                'type' => FormFieldType::FILE,
+                'type' => FormFieldType::CHECKMARK,
             ]
         );
 
         $form = $this->createPyrusFormMock($field);
+
+        $options = PyrusFieldConverterHelper::getDefaultOptions($field);
+        $options['format'] = 'yyyy-MM-dd';
 
         $builder = $this->createSymfonyFormBuilderMock();
         $builder->expects($this->once())
             ->method('add')
             ->with(
                 $this->identicalTo(PyrusFieldConverterHelper::getHtmlName($field)),
-                $this->identicalTo(FileType::class),
-                $this->identicalTo(PyrusFieldConverterHelper::getDefaultOptions($field)),
+                $this->identicalTo(DateType::class),
+                $this->identicalTo($options)
             );
 
-        $converter = new PyrusFieldConverterFile();
+        $converter = new PyrusFieldConverterDate();
         $converter->convert($form, $field, $builder);
     }
 }

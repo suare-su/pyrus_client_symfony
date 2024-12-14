@@ -34,7 +34,7 @@ final class PyrusFieldConverterEmailTest extends BaseCasePyrusForm
     public static function provideSupportsConversion(): array
     {
         return [
-            'number type' => [
+            'email type' => [
                 FormFieldType::EMAIL,
                 true,
             ],

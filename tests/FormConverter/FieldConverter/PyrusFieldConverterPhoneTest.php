@@ -34,7 +34,7 @@ final class PyrusFieldConverterPhoneTest extends BaseCasePyrusForm
     public static function provideSupportsConversion(): array
     {
         return [
-            'text type' => [
+            'phone type' => [
                 FormFieldType::PHONE,
                 true,
             ],

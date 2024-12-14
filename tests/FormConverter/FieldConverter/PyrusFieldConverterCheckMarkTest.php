@@ -34,7 +34,7 @@ final class PyrusFieldConverterCheckMarkTest extends BaseCasePyrusForm
     public static function provideSupportsConversion(): array
     {
         return [
-            'number type' => [
+            'check mark type' => [
                 FormFieldType::CHECKMARK,
                 true,
             ],
