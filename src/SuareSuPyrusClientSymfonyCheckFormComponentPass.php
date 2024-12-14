@@ -16,15 +16,15 @@ final class SuareSuPyrusClientSymfonyCheckFormComponentPass implements CompilerP
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->has('form.factory')) {
             return;
         }
 
-        $loader = new YamlFileLoader($container, new FileLocator(dirname($this->additionalServices)));
-        $loader->load(pathinfo($this->additionalServices, PATHINFO_BASENAME));
+        $loader = new YamlFileLoader($container, new FileLocator(\dirname($this->additionalServices)));
+        $loader->load(pathinfo($this->additionalServices, \PATHINFO_BASENAME));
     }
 }
