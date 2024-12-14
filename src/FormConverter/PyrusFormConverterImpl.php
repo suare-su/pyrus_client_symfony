@@ -16,8 +16,12 @@ use Symfony\Component\Form\FormFactoryInterface;
  */
 final class PyrusFormConverterImpl implements PyrusFormConverter
 {
+    /**
+     * @param iterable<PyrusFieldConverter> $fieldsConverters
+     */
     public function __construct(
         private readonly FormFactoryInterface $formFactory,
+        private readonly iterable $fieldsConverters,
     ) {
     }
 
@@ -29,16 +33,25 @@ final class PyrusFormConverterImpl implements PyrusFormConverter
         $formBuilder = $this->formFactory->createBuilder();
 
         foreach ($pyrusForm->fields as $field) {
-            $this->convertAndBuildField($formBuilder, $field);
+            $this->convertAndBuildField($pyrusForm, $field, $formBuilder);
         }
 
         return new PyrusFormConverterResult($pyrusForm, $formBuilder->getForm());
     }
 
     /**
-     * Convert and build single field.
+     * Convert single field and add it to builder.
      */
-    private function convertAndBuildField(FormBuilderInterface $builder, FormField $field): void
+    private function convertAndBuildField(Form $pyrusForm, FormField $field, FormBuilderInterface $builder): void
     {
+        foreach ($this->fieldsConverters as $converter) {
+            if ($converter->supportsConversion($pyrusForm, $field)) {
+                $converter->convert($pyrusForm, $field, $builder);
+
+                return;
+            }
+        }
+
+        throw new \RuntimeException("Can't convert filed '{$field->name}' in '{$pyrusForm->name}'");
     }
 }
