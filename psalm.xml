@@ -11,6 +11,9 @@
         <directory name="./src"/>
         <directory name="./tests"/>
         <directory name="./scripts/src"/>
+        <ignoreFiles allowMissingFiles="true">
+            <file name="./src/SuareSuPyrusClientSymfonyBundle.php" />
+        </ignoreFiles>
     </projectFiles>
 
     <issueHandlers>

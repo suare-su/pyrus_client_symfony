@@ -9,6 +9,9 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
+/**
+ * @psalm-api
+ */
 final class SuareSuPyrusClientSymfonyCheckFormComponentPass implements CompilerPassInterface
 {
     public function __construct(private readonly string $additionalServices)
