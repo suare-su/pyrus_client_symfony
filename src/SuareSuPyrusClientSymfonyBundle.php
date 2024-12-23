@@ -4,19 +4,33 @@ declare(strict_types=1);
 
 namespace SuareSu\PyrusClientSymfony;
 
+use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 /**
- * Bundle object.
+ * Bundle class.
  *
  * @psalm-api
  */
 class SuareSuPyrusClientSymfonyBundle extends AbstractBundle
 {
+    private const BUNDLE_ID = 'suare_su_pyrus_client_symfony';
     private const SERVICES_YAML = __DIR__ . '/../config/services.yaml';
     private const FORM_CONVERTER_SERVICES_YAML = __DIR__ . '/../config/form_converter_services.yaml';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configure(DefinitionConfigurator $definition): void
+    {
+        $definition->rootNode()
+            ->children()
+                ->booleanNode('ignore_unknown_types')->defaultFalse()->end()
+            ->end()
+        ;
+    }
 
     /**
      * {@inheritdoc}

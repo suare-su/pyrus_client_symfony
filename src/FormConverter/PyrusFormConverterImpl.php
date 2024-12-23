@@ -24,6 +24,7 @@ final class PyrusFormConverterImpl implements PyrusFormConverter
         private readonly FormFactoryInterface $formFactory,
         private readonly iterable $fieldsConverters,
         private readonly ?PyrusFormConverterFinalizer $formFinalizer = null,
+        private readonly bool $ignoreUnknownTypes = false,
     ) {
     }
 
@@ -56,6 +57,8 @@ final class PyrusFormConverterImpl implements PyrusFormConverter
             }
         }
 
-        throw new \RuntimeException("Can't convert filed '{$field->name}' in '{$pyrusForm->name}'");
+        if (!$this->ignoreUnknownTypes) {
+            throw new \RuntimeException("Can't convert filed '{$field->name}' in '{$pyrusForm->name}'");
+        }
     }
 }

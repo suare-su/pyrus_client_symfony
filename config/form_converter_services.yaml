@@ -11,6 +11,7 @@ services:
       - '@form.factory'
       - !tagged_iterator pyrus_client_symfony.field_converter
       - '@SuareSu\PyrusClientSymfony\FormConverter\PyrusFormConverterFinalizer'
+      - '%suare_su_pyrus_client_symfony.ignore_unknown_types%'
 
   SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterCheckMark:
     class: SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterCheckMark
