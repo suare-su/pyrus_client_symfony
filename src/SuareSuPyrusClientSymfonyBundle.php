@@ -38,6 +38,8 @@ class SuareSuPyrusClientSymfonyBundle extends AbstractBundle
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $container->import(self::SERVICES_YAML);
+
+        $container->parameters()->set(self::BUNDLE_ID . '.ignore_unknown_types', $config['ignore_unknown_types']);
     }
 
     /**
