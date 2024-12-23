@@ -27,7 +27,7 @@ class SuareSuPyrusClientSymfonyBundle extends AbstractBundle
     {
         $definition->rootNode()
             ->children()
-                ->booleanNode('ignore_unknown_types')->defaultValue(false)->end()
+                ->booleanNode('ignore_unknown_types')->defaultFalse()->end()
             ->end()
         ;
     }
@@ -39,9 +39,10 @@ class SuareSuPyrusClientSymfonyBundle extends AbstractBundle
     {
         $container->import(self::SERVICES_YAML);
 
-        foreach ($config as $key => $value) {
-            $container->setParameter(self::BUNDLE_ID . '.' . $key, $value);
-        }
+        $container->services()->set(
+            self::BUNDLE_ID . '.ignore_unknown_types', 
+            $config['ignore_unknown_types']
+        );
     }
 
     /**
