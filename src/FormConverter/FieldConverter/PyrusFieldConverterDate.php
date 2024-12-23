@@ -32,6 +32,7 @@ final class PyrusFieldConverterDate implements PyrusFieldConverter
     {
         $options = PyrusFieldConverterHelper::getDefaultOptions($field);
         $options['format'] = 'yyyy-MM-dd';
+        $options['html5'] = false;
 
         $builder->add(
             PyrusFieldConverterHelper::getHtmlName($field),

@@ -32,6 +32,7 @@ final class PyrusFieldConverterDueDateTime implements PyrusFieldConverter
     {
         $options = PyrusFieldConverterHelper::getDefaultOptions($field);
         $options['format'] = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+        $options['html5'] = false;
 
         $builder->add(
             PyrusFieldConverterHelper::getHtmlName($field),
