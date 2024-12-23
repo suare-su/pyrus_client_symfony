@@ -38,7 +38,7 @@ final class PyrusFormConverterFinalizerImplTest extends BaseCasePyrusForm
             ->with(
                 $this->identicalTo('submit'),
                 $this->anything(),
-                $this->identicalTo('pyrus.form.converter')
+                $this->identicalTo('SuareSuPyrusClientSymfonyBundle')
             )
             ->willReturn($label);
 
