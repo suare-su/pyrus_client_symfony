@@ -40,7 +40,7 @@ class SuareSuPyrusClientSymfonyBundle extends AbstractBundle
         $container->import(self::SERVICES_YAML);
 
         $container->services()->set(
-            self::BUNDLE_ID . '.ignore_unknown_types', 
+            self::BUNDLE_ID . '.ignore_unknown_types',
             $config['ignore_unknown_types']
         );
     }
