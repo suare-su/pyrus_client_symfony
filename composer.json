@@ -12,7 +12,7 @@
     "symfony/framework-bundle": "^7.0",
     "symfony/clock": "^7.0",
     "marvin255/in-memory-cache": "^2.3",
-    "symfony/translation": "^7.2"
+    "symfony/translation": "^7.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^10.0",
@@ -21,7 +21,7 @@
     "infection/infection": "^0.27",
     "symfony/property-access": "^7.0",
     "nette/php-generator": "^4.1",
-    "symfony/form": "^7.2"
+    "symfony/form": "^7.0"
   },
   "suggest": {
     "symfony/form": "Needed to convert Pyrus forms to Symfony forms"
