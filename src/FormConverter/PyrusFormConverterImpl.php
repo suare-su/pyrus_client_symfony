@@ -23,6 +23,7 @@ final class PyrusFormConverterImpl implements PyrusFormConverter
     public function __construct(
         private readonly FormFactoryInterface $formFactory,
         private readonly iterable $fieldsConverters,
+        private readonly ?PyrusFormConverterFinalizer $formFinalizer = null,
     ) {
     }
 
@@ -36,6 +37,8 @@ final class PyrusFormConverterImpl implements PyrusFormConverter
         foreach ($pyrusForm->fields as $field) {
             $this->convertAndBuildField($pyrusForm, $field, $formBuilder);
         }
+
+        $this->formFinalizer?->finalize($pyrusForm, $formBuilder);
 
         return new PyrusFormConverterResult($pyrusForm, $formBuilder->getForm());
     }

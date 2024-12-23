@@ -7,6 +7,7 @@ namespace SuareSu\PyrusClientSymfony\Tests\FormConverter;
 use SuareSu\PyrusClient\Entity\Form\Form;
 use SuareSu\PyrusClient\Entity\Form\FormField;
 use SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverter;
+use SuareSu\PyrusClientSymfony\FormConverter\PyrusFormConverterFinalizer;
 use SuareSu\PyrusClientSymfony\FormConverter\PyrusFormConverterImpl;
 use SuareSu\PyrusClientSymfony\Tests\BaseCasePyrusForm;
 use Symfony\Component\Form\FormInterface;
@@ -137,6 +138,34 @@ final class PyrusFormConverterImplTest extends BaseCasePyrusForm
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage($pyrusField->name);
+        $formConverted->convert($pyrusForm);
+    }
+
+    /**
+     * @test
+     */
+    public function testConvertFormFinalizer(): void
+    {
+        $symfonyForm = $this->mock(FormInterface::class);
+        $formBuilder = $this->createSymfonyFormBuilderMock($symfonyForm);
+        $formFactory = $this->createSymfonyFormFactoryMock($formBuilder);
+
+        $pyrusField = $this->createPyrusFieldMock();
+        $pyrusForm = $this->createPyrusFormMock($pyrusField);
+
+        $converter = $this->mock(PyrusFieldConverter::class);
+        $converter->expects($this->any())->method('supportsConversion')->willReturn(true);
+
+        $finalizer = $this->mock(PyrusFormConverterFinalizer::class);
+        $finalizer->expects($this->once())
+            ->method('finalize')
+            ->with(
+                $this->identicalTo($pyrusForm),
+                $this->identicalTo($formBuilder)
+            );
+
+        $formConverted = new PyrusFormConverterImpl($formFactory, [$converter], $finalizer);
+
         $formConverted->convert($pyrusForm);
     }
 }
