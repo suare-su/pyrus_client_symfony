@@ -31,7 +31,7 @@ final class PyrusFormConverterFinalizerImpl implements PyrusFormConverterFinaliz
             'save',
             SubmitType::class,
             [
-                'label' => $this->translator->trans('Submit', domain: 'pyrus.form.converter'),
+                'label' => $this->translator->trans('submit', domain: 'pyrus.form.converter'),
             ]
         );
     }
