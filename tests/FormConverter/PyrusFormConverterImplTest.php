@@ -134,11 +134,36 @@ final class PyrusFormConverterImplTest extends BaseCasePyrusForm
         $converter->expects($this->any())->method('supportsConversion')->willReturn(false);
         $converter->expects($this->never())->method('convert');
 
-        $formConverted = new PyrusFormConverterImpl($formFactory, [$converter]);
+        $formConverted = new PyrusFormConverterImpl($formFactory, [$converter], null, false);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage($pyrusField->name);
         $formConverted->convert($pyrusForm);
+    }
+
+    /**
+     * @test
+     */
+    public function testConvertCantConvertFieldIgnore(): void
+    {
+        $symfonyForm = $this->mock(FormInterface::class);
+
+        $formBuilder = $this->createSymfonyFormBuilderMock($symfonyForm);
+
+        $formFactory = $this->createSymfonyFormFactoryMock($formBuilder);
+
+        $pyrusField = $this->createPyrusFieldMock();
+        $pyrusForm = $this->createPyrusFormMock($pyrusField);
+
+        $converter = $this->mock(PyrusFieldConverter::class);
+        $converter->expects($this->any())->method('supportsConversion')->willReturn(false);
+        $converter->expects($this->never())->method('convert');
+
+        $formConverted = new PyrusFormConverterImpl($formFactory, [$converter], null, true);
+        $res = $formConverted->convert($pyrusForm);
+
+        $this->assertSame($symfonyForm, $res->symfonyForm);
+        $this->assertSame($pyrusForm, $res->pyrusForm);
     }
 
     /**
