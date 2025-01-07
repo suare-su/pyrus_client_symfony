@@ -33,7 +33,12 @@ final class PyrusFormConverterImpl implements PyrusFormConverter
      */
     public function convert(Form $pyrusForm): PyrusFormConverterResult
     {
-        $formBuilder = $this->formFactory->createBuilder();
+        $formBuilder = $this->formFactory->createNamedBuilder(
+            name: "form_{$pyrusForm->id}",
+            options: [
+                'label' => $pyrusForm->name,
+            ]
+        );
 
         foreach ($pyrusForm->fields as $field) {
             $this->convertAndBuildField($pyrusForm, $field, $formBuilder);

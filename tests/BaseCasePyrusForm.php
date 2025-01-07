@@ -81,7 +81,7 @@ abstract class BaseCasePyrusForm extends BaseCase
         $formFactory = $this->mock(FormFactoryInterface::class);
 
         if (null !== $builder) {
-            $formFactory->expects($this->any())->method('createBuilder')->willReturn($builder);
+            $formFactory->expects($this->any())->method('createNamedBuilder')->willReturn($builder);
         }
 
         return $formFactory;
