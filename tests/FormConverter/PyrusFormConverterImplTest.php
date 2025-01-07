@@ -10,6 +10,7 @@ use SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverter;
 use SuareSu\PyrusClientSymfony\FormConverter\PyrusFormConverterFinalizer;
 use SuareSu\PyrusClientSymfony\FormConverter\PyrusFormConverterImpl;
 use SuareSu\PyrusClientSymfony\Tests\BaseCasePyrusForm;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 
 /**
@@ -22,12 +23,22 @@ final class PyrusFormConverterImplTest extends BaseCasePyrusForm
      */
     public function testConvert(): void
     {
-        $symfonyForm = $this->mock(FormInterface::class);
-        $formBuilder = $this->createSymfonyFormBuilderMock($symfonyForm);
-        $formFactory = $this->createSymfonyFormFactoryMock($formBuilder);
-
         $pyrusField = $this->createPyrusFieldMock();
         $pyrusForm = $this->createPyrusFormMock($pyrusField);
+
+        $symfonyForm = $this->mock(FormInterface::class);
+        $formBuilder = $this->createSymfonyFormBuilderMock($symfonyForm);
+
+        $formFactory = $this->mock(FormFactoryInterface::class);
+        $formFactory->expects($this->once())
+            ->method('createNamedBuilder')
+            ->with(
+                $this->identicalTo("form_{$pyrusForm->id}"),
+                $this->anything(),
+                $this->anything(),
+                $this->identicalTo(['label' => $pyrusForm->name]),
+            )
+            ->willReturn($formBuilder);
 
         $converter = $this->mock(PyrusFieldConverter::class);
         $converter->expects($this->any())
