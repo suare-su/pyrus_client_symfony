@@ -7,8 +7,8 @@ namespace SuareSu\PyrusClientSymfony\Tests\FormConverter\FieldConverter;
 use SuareSu\PyrusClient\Entity\Form\FormFieldType;
 use SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterHelper;
 use SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterPhone;
+use SuareSu\PyrusClientSymfony\FormType\PhoneType;
 use SuareSu\PyrusClientSymfony\Tests\BaseCasePyrusForm;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * @internal
@@ -63,8 +63,8 @@ final class PyrusFieldConverterPhoneTest extends BaseCasePyrusForm
             ->method('add')
             ->with(
                 $this->identicalTo(PyrusFieldConverterHelper::getHtmlName($field)),
-                $this->identicalTo(TextType::class),
-                $this->identicalTo(PyrusFieldConverterHelper::getDefaultOptions($field, 'phone')),
+                $this->identicalTo(PhoneType::class),
+                $this->identicalTo(PyrusFieldConverterHelper::getDefaultOptions($field)),
             );
 
         $converter = new PyrusFieldConverterPhone();

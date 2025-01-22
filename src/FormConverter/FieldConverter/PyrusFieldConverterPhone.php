@@ -7,7 +7,7 @@ namespace SuareSu\PyrusClientSymfony\FormConverter\FieldConverter;
 use SuareSu\PyrusClient\Entity\Form\Form;
 use SuareSu\PyrusClient\Entity\Form\FormField;
 use SuareSu\PyrusClient\Entity\Form\FormFieldType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use SuareSu\PyrusClientSymfony\FormType\PhoneType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -32,8 +32,8 @@ final class PyrusFieldConverterPhone implements PyrusFieldConverter
     {
         $builder->add(
             PyrusFieldConverterHelper::getHtmlName($field),
-            TextType::class,
-            PyrusFieldConverterHelper::getDefaultOptions($field, 'phone')
+            PhoneType::class,
+            PyrusFieldConverterHelper::getDefaultOptions($field)
         );
     }
 }
