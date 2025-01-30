@@ -145,7 +145,7 @@ final class PyrusFormConverterImplTest extends BaseCasePyrusForm
         $converter->expects($this->any())->method('supportsConversion')->willReturn(false);
         $converter->expects($this->never())->method('convert');
 
-        $formConverted = new PyrusFormConverterImpl($formFactory, [$converter], null, false);
+        $formConverted = new PyrusFormConverterImpl($formFactory, [$converter], null);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage($pyrusField->name);

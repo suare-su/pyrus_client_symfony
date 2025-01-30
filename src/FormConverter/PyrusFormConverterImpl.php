@@ -34,10 +34,8 @@ final class PyrusFormConverterImpl implements PyrusFormConverter
     public function convert(Form $pyrusForm): PyrusFormConverterResult
     {
         $formBuilder = $this->formFactory->createNamedBuilder(
-            name: "form_{$pyrusForm->id}",
-            options: [
-                'label' => $pyrusForm->name,
-            ]
+            name: PyrusFormConverterHelper::getHtmlName($pyrusForm),
+            options: PyrusFormConverterHelper::getDefaultOptions($pyrusForm),
         );
 
         foreach ($pyrusForm->fields as $field) {
