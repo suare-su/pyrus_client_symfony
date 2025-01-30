@@ -43,13 +43,13 @@ abstract class BaseCasePyrusForm extends BaseCase
      *
      * @param array<FormField>|FormField $fields
      */
-    protected function createPyrusFormMock(array|FormField $fields = []): Form
+    protected function createPyrusFormMock(array|FormField $fields = [], array $params = []): Form
     {
         $fields = \is_array($fields) ? $fields : [$fields];
 
         return new Form(
-            id: 123,
-            name: 'form',
+            id: (int) ($params['id'] ?? 123),
+            name: (string) ($params['name'] ?? 'form'),
             deletedOrClosed: false,
             fields: $fields
         );
