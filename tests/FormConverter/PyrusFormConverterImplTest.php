@@ -29,6 +29,16 @@ final class PyrusFormConverterImplTest extends BaseCasePyrusForm
         $symfonyForm = $this->mock(FormInterface::class);
         $formBuilder = $this->createSymfonyFormBuilderMock($symfonyForm);
 
+        $options = [
+            'test_key' => 'test label',
+            'test_key_1' => 'test value 1',
+        ];
+        $expectedOptions = [
+            'label' => $pyrusForm->name,
+            'test_key' => 'test label',
+            'test_key_1' => 'test value 1',
+        ];
+
         $formFactory = $this->mock(FormFactoryInterface::class);
         $formFactory->expects($this->once())
             ->method('createNamedBuilder')
@@ -36,7 +46,7 @@ final class PyrusFormConverterImplTest extends BaseCasePyrusForm
                 $this->identicalTo("form_{$pyrusForm->id}"),
                 $this->anything(),
                 $this->anything(),
-                $this->identicalTo(['label' => $pyrusForm->name]),
+                $this->identicalTo($expectedOptions),
             )
             ->willReturn($formBuilder);
 
@@ -56,7 +66,7 @@ final class PyrusFormConverterImplTest extends BaseCasePyrusForm
             );
 
         $formConverted = new PyrusFormConverterImpl($formFactory, [$converter]);
-        $res = $formConverted->convert($pyrusForm);
+        $res = $formConverted->convert($pyrusForm, $options);
 
         $this->assertSame($symfonyForm, $res->symfonyForm);
         $this->assertSame($pyrusForm, $res->pyrusForm);
