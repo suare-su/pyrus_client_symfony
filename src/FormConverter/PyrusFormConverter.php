@@ -16,5 +16,5 @@ interface PyrusFormConverter
     /**
      * Convert Pyrus form to Symfony form.
      */
-    public function convert(Form $pyrusForm): PyrusFormConverterResult;
+    public function convert(Form $pyrusForm, array $options = []): PyrusFormConverterResult;
 }

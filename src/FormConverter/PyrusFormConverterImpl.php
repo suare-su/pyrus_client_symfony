@@ -31,11 +31,16 @@ final class PyrusFormConverterImpl implements PyrusFormConverter
     /**
      * {@inheritdoc}
      */
-    public function convert(Form $pyrusForm): PyrusFormConverterResult
+    public function convert(Form $pyrusForm, array $options = []): PyrusFormConverterResult
     {
+        $resultOptions = array_merge(
+            PyrusFormConverterHelper::getDefaultOptions($pyrusForm),
+            $options
+        );
+
         $formBuilder = $this->formFactory->createNamedBuilder(
             name: PyrusFormConverterHelper::getHtmlName($pyrusForm),
-            options: PyrusFormConverterHelper::getDefaultOptions($pyrusForm),
+            options: $resultOptions,
         );
 
         foreach ($pyrusForm->fields as $field) {
