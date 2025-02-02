@@ -59,7 +59,7 @@ final class PyrusFieldConverterDueDateTimeTest extends BaseCasePyrusForm
         $form = $this->createPyrusFormMock($field);
 
         $options = PyrusFieldConverterHelper::getDefaultOptions($field);
-        $options['format'] = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+        $options['format'] = 'yyyy-MM-dd HH:mm:ss';
         $options['html5'] = false;
 
         $builder = $this->createSymfonyFormBuilderMock();
