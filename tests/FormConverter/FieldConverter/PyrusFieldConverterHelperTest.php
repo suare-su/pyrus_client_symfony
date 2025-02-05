@@ -51,6 +51,7 @@ final class PyrusFieldConverterHelperTest extends BaseCasePyrusForm
         $this->assertSame(
             [
                 'label' => $name,
+                'required' => false,
             ],
             $res
         );

@@ -45,6 +45,7 @@ final class PyrusFieldConverterHelper
     {
         return [
             'label' => self::getHtmlLabel($field),
+            'required' => false,
         ];
     }
 }
