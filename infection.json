@@ -17,6 +17,7 @@
         "@default": true,
         "CastString": false,
         "CastInt": false,
-        "CastArray": false
+        "CastArray": false,
+        "Coalesce": false
     }
 }

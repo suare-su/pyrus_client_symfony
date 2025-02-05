@@ -9,6 +9,7 @@ use SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterE
 use SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterHelper;
 use SuareSu\PyrusClientSymfony\Tests\BaseCasePyrusForm;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Validator\Constraints\Email;
 
 /**
  * @internal
@@ -64,7 +65,11 @@ final class PyrusFieldConverterEmailTest extends BaseCasePyrusForm
             ->with(
                 $this->identicalTo(PyrusFieldConverterHelper::getHtmlName($field)),
                 $this->identicalTo(EmailType::class),
-                $this->identicalTo(PyrusFieldConverterHelper::getDefaultOptions($field)),
+                $this->callback(
+                    fn (array $o): bool => [] === array_diff_assoc(PyrusFieldConverterHelper::getDefaultOptions($field), $o)
+                        && isset($o['constraints'][0])
+                        && $o['constraints'][0] instanceof Email
+                )
             );
 
         $converter = new PyrusFieldConverterEmail();
