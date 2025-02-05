@@ -9,6 +9,7 @@ use SuareSu\PyrusClient\Entity\Form\FormField;
 use SuareSu\PyrusClient\Entity\Form\FormFieldType;
 use SuareSu\PyrusClientSymfony\FormType\PhoneType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Converter for the text field.
@@ -17,6 +18,8 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 final class PyrusFieldConverterPhone implements PyrusFieldConverter
 {
+    private const PHONE_REGEXP = '/^[0-9]{11}$/';
+
     /**
      * {@inheritdoc}
      */
@@ -30,10 +33,12 @@ final class PyrusFieldConverterPhone implements PyrusFieldConverter
      */
     public function convert(Form $pyrusForm, FormField $field, FormBuilderInterface $builder): void
     {
-        $builder->add(
-            PyrusFieldConverterHelper::getHtmlName($field),
-            PhoneType::class,
-            PyrusFieldConverterHelper::getDefaultOptions($field)
-        );
+        $htmlName = PyrusFieldConverterHelper::getHtmlName($field);
+
+        $options = PyrusFieldConverterHelper::getDefaultOptions($field);
+        $options['constraints'] = (array) ($options['constraints'] ?? []);
+        $options['constraints'][] = new Regex(self::PHONE_REGEXP);
+
+        $builder->add($htmlName, PhoneType::class, $options);
     }
 }

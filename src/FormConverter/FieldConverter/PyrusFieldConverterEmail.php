@@ -9,6 +9,7 @@ use SuareSu\PyrusClient\Entity\Form\FormField;
 use SuareSu\PyrusClient\Entity\Form\FormFieldType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Email;
 
 /**
  * Converter for the text field.
@@ -30,10 +31,12 @@ final class PyrusFieldConverterEmail implements PyrusFieldConverter
      */
     public function convert(Form $pyrusForm, FormField $field, FormBuilderInterface $builder): void
     {
-        $builder->add(
-            PyrusFieldConverterHelper::getHtmlName($field),
-            EmailType::class,
-            PyrusFieldConverterHelper::getDefaultOptions($field)
-        );
+        $htmlName = PyrusFieldConverterHelper::getHtmlName($field);
+
+        $options = PyrusFieldConverterHelper::getDefaultOptions($field);
+        $options['constraints'] = (array) ($options['constraints'] ?? []);
+        $options['constraints'][] = new Email();
+
+        $builder->add($htmlName, EmailType::class, $options);
     }
 }

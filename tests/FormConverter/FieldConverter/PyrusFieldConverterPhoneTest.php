@@ -9,6 +9,7 @@ use SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterH
 use SuareSu\PyrusClientSymfony\FormConverter\FieldConverter\PyrusFieldConverterPhone;
 use SuareSu\PyrusClientSymfony\FormType\PhoneType;
 use SuareSu\PyrusClientSymfony\Tests\BaseCasePyrusForm;
+use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * @internal
@@ -64,7 +65,11 @@ final class PyrusFieldConverterPhoneTest extends BaseCasePyrusForm
             ->with(
                 $this->identicalTo(PyrusFieldConverterHelper::getHtmlName($field)),
                 $this->identicalTo(PhoneType::class),
-                $this->identicalTo(PyrusFieldConverterHelper::getDefaultOptions($field)),
+                $this->callback(
+                    fn (array $o): bool => [] === array_diff_assoc(PyrusFieldConverterHelper::getDefaultOptions($field), $o)
+                        && isset($o['constraints'][0])
+                        && $o['constraints'][0] instanceof Regex
+                )
             );
 
         $converter = new PyrusFieldConverterPhone();
