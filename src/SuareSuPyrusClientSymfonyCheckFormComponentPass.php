@@ -23,7 +23,7 @@ final class SuareSuPyrusClientSymfonyCheckFormComponentPass implements CompilerP
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has('form.factory')) {
+        if (!$container->has('form.factory') || !$container->has('validator')) {
             return;
         }
 
