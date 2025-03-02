@@ -177,6 +177,7 @@ final class SerializerGenerator
     private function addEntityNormalize(ClassType $class, ClassDescription $description, array $descriptions): void
     {
         $items = [];
+        $conditionals = '';
         foreach ($description->properties as $property => $definition) {
             if (!isset($definition[0])) {
                 continue;
@@ -198,13 +199,30 @@ final class SerializerGenerator
                 }
             } elseif (null !== $className && (new \ReflectionClass($className))->isEnum()) {
                 $propertyValue = "\$object->{$property}->value";
+            } elseif (null !== $className && \DateTimeInterface::class === $className) {
+                $propertyValue = "\$object->{$property}->format('Y-m-d\TH:i:s\Z')";
             } else {
                 $propertyValue = "\$object->{$property}";
             }
-            $items[] = "'{$propertyKey}' => {$propertyValue}";
+            if ($type->isNullable()) {
+                $conditionals .= PhpLineHelper::if(
+                    "\$object->{$property} !== null",
+                    "\$result['{$propertyKey}'] = {$propertyValue}"
+                );
+            } else {
+                $items[] = "'{$propertyKey}' => {$propertyValue}";
+            }
         }
 
-        $body = PhpLineHelper::return(PhpLineHelper::array($items));
+        if ('' !== $conditionals) {
+            $body = '$result = ' . PhpLineHelper::array($items);
+            $body .= PhpLineHelper::skipLine();
+            $body .= $conditionals;
+            $body .= PhpLineHelper::skipLine();
+            $body .= PhpLineHelper::return('$result');
+        } else {
+            $body = PhpLineHelper::return(PhpLineHelper::array($items));
+        }
 
         $method = $class->addMethod("normalize{$description->shortClassName}")
             ->setReturnType('array')
@@ -281,16 +299,12 @@ final class SerializerGenerator
     {
         $body = PhpLineHelper::NEW_LINE;
         foreach ($description->properties as $property => $definition) {
-            if (!isset($definition[0])) {
-                continue;
-            }
-            $type = $definition[0];
+            $type = $definition[0] ?? null;
             /** @psalm-var class-string|null */
-            $className = $type->getClassName();
+            $className = $type?->getClassName();
             $propertyKey = CaseHelper::camelToSnake($property);
-            $propertyValue = null;
-            $builtInType = $type->getBuiltinType();
-            if ($type->isCollection()) {
+            $builtInType = $type?->getBuiltinType();
+            if ($type && $type->isCollection()) {
                 $valueType = $type->getCollectionValueTypes()[0] ?? null;
                 $builtInValueType = $valueType?->getBuiltinType();
                 $valueDescription = $descriptions[(string) $valueType?->getClassName()] ?? null;
@@ -305,16 +319,25 @@ final class SerializerGenerator
                 } else {
                     $propertyValue = "(array) (\$data['{$propertyKey}'] ?? [])";
                 }
-            } elseif (\in_array($builtInType, self::SCALAR_TYPES)) {
+            } elseif (null !== $className && isset($descriptions[$className])) {
+                $valueDescription = $descriptions[$className];
+                $propertyValue = "\$this->denormalize{$valueDescription->shortClassName}((array) (\$data['{$propertyKey}'] ?? []))";
+            } elseif (isset(self::SCALAR_TYPES_DEFAULTS[$builtInType])) {
                 $default = self::SCALAR_TYPES_DEFAULTS[$builtInType];
                 $propertyValue = "($builtInType) (\$data['{$propertyKey}'] ?? {$default})";
             } elseif (null !== $className && (new \ReflectionClass($className))->isEnum()) {
                 $ns->addUse($className);
                 $propertyValue = "\\{$className}::from((string) (\$data['{$propertyKey}'] ?? ''))";
+            } elseif (null !== $className && \DateTimeInterface::class === $className) {
+                $ns->addUse(\DateTimeImmutable::class);
+                $propertyValue = "new DateTimeImmutable((string) (\$data['{$propertyKey}'] ?? ''))";
+            } else {
+                $propertyValue = "\$data['{$propertyKey}'] ?? null";
             }
-            if (null !== $propertyValue) {
-                $body .= PhpLineHelper::line($propertyValue, 1, false) . PhpLineHelper::COMMA . PhpLineHelper::NEW_LINE;
+            if ($type && $type->isNullable()) {
+                $propertyValue = "isset(\$data['{$propertyKey}']) ? {$propertyValue} : null";
             }
+            $body .= PhpLineHelper::line($propertyValue, 1, false) . PhpLineHelper::COMMA . PhpLineHelper::NEW_LINE;
         }
 
         $body = PhpLineHelper::return("new {$description->shortClassName}({$body})");
@@ -364,7 +387,12 @@ final class SerializerGenerator
             $propertiesDescriptions = [];
             $properties = $this->propertyInfoExtractor->getProperties($class) ?? [];
             foreach ($properties as $property) {
-                $propertiesDescriptions[$property] = array_filter($this->propertyInfoExtractor->getTypes($class, $property));
+                $propertyTypes = $this->propertyInfoExtractor->getTypes($class, $property);
+                if (null !== $propertyTypes) {
+                    $propertiesDescriptions[$property] = array_filter($propertyTypes);
+                } else {
+                    $propertiesDescriptions[$property] = [];
+                }
             }
             $explodedArrayName = explode('\\', $class);
             $result[$class] = new ClassDescription(

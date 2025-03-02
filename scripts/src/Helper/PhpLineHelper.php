@@ -70,7 +70,7 @@ final class PhpLineHelper
         $ifBody = self::line($body, $tabCount + 1, true);
         $ifEnd = self::line('}', $tabCount, false);
 
-        return $ifLine . self::NEW_LINE . $ifBody . self::NEW_LINE . $ifEnd;
+        return $ifLine . self::NEW_LINE . $ifBody . self::NEW_LINE . $ifEnd . self::NEW_LINE;
     }
 
     /**

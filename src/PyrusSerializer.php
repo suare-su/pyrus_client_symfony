@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SuareSu\PyrusClientSymfony;
 
+use SuareSu\PyrusClient\Entity\Attachment\Attachment;
 use SuareSu\PyrusClient\Entity\Catalog\Catalog;
 use SuareSu\PyrusClient\Entity\Catalog\CatalogCreate;
 use SuareSu\PyrusClient\Entity\Catalog\CatalogHeader;
@@ -15,6 +16,13 @@ use SuareSu\PyrusClient\Entity\Form\Form;
 use SuareSu\PyrusClient\Entity\Form\FormField;
 use SuareSu\PyrusClient\Entity\Form\FormFieldType;
 use SuareSu\PyrusClient\Entity\Form\PrintForm;
+use SuareSu\PyrusClient\Entity\Person\Person;
+use SuareSu\PyrusClient\Entity\Task\Approval;
+use SuareSu\PyrusClient\Entity\Task\Comment;
+use SuareSu\PyrusClient\Entity\Task\FormTask;
+use SuareSu\PyrusClient\Entity\Task\FormTaskCreate;
+use SuareSu\PyrusClient\Entity\Task\FormTaskCreateField;
+use SuareSu\PyrusClient\Entity\Task\FormTaskField;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -29,9 +37,17 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
      */
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return $data instanceof PrintForm
+        return $data instanceof FormTask
+            || $data instanceof FormTaskCreateField
+            || $data instanceof Comment
+            || $data instanceof FormTaskField
+            || $data instanceof FormTaskCreate
+            || $data instanceof Approval
+            || $data instanceof Attachment
+            || $data instanceof PrintForm
             || $data instanceof Form
             || $data instanceof FormField
+            || $data instanceof Person
             || $data instanceof CatalogUpdate
             || $data instanceof CatalogItem
             || $data instanceof CatalogCreate
@@ -46,12 +62,28 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
      */
     public function normalize(mixed $data, ?string $format = null, array $context = []): array
     {
-        if ($data instanceof PrintForm) {
+        if ($data instanceof FormTask) {
+            return $this->normalizeFormTask($data);
+        } elseif ($data instanceof FormTaskCreateField) {
+            return $this->normalizeFormTaskCreateField($data);
+        } elseif ($data instanceof Comment) {
+            return $this->normalizeComment($data);
+        } elseif ($data instanceof FormTaskField) {
+            return $this->normalizeFormTaskField($data);
+        } elseif ($data instanceof FormTaskCreate) {
+            return $this->normalizeFormTaskCreate($data);
+        } elseif ($data instanceof Approval) {
+            return $this->normalizeApproval($data);
+        } elseif ($data instanceof Attachment) {
+            return $this->normalizeAttachment($data);
+        } elseif ($data instanceof PrintForm) {
             return $this->normalizePrintForm($data);
         } elseif ($data instanceof Form) {
             return $this->normalizeForm($data);
         } elseif ($data instanceof FormField) {
             return $this->normalizeFormField($data);
+        } elseif ($data instanceof Person) {
+            return $this->normalizePerson($data);
         } elseif ($data instanceof CatalogUpdate) {
             return $this->normalizeCatalogUpdate($data);
         } elseif ($data instanceof CatalogItem) {
@@ -80,9 +112,17 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
         ?string $format = null,
         array $context = [],
     ): bool {
-        return PrintForm::class === $type
+        return FormTask::class === $type
+            || FormTaskCreateField::class === $type
+            || Comment::class === $type
+            || FormTaskField::class === $type
+            || FormTaskCreate::class === $type
+            || Approval::class === $type
+            || Attachment::class === $type
+            || PrintForm::class === $type
             || Form::class === $type
             || FormField::class === $type
+            || Person::class === $type
             || CatalogUpdate::class === $type
             || CatalogItem::class === $type
             || CatalogCreate::class === $type
@@ -101,12 +141,28 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             throw new InvalidArgumentException("Can't denormalize provided data");
         }
 
-        if (PrintForm::class === $type) {
+        if (FormTask::class === $type) {
+            return $this->denormalizeFormTask($data);
+        } elseif (FormTaskCreateField::class === $type) {
+            return $this->denormalizeFormTaskCreateField($data);
+        } elseif (Comment::class === $type) {
+            return $this->denormalizeComment($data);
+        } elseif (FormTaskField::class === $type) {
+            return $this->denormalizeFormTaskField($data);
+        } elseif (FormTaskCreate::class === $type) {
+            return $this->denormalizeFormTaskCreate($data);
+        } elseif (Approval::class === $type) {
+            return $this->denormalizeApproval($data);
+        } elseif (Attachment::class === $type) {
+            return $this->denormalizeAttachment($data);
+        } elseif (PrintForm::class === $type) {
             return $this->denormalizePrintForm($data);
         } elseif (Form::class === $type) {
             return $this->denormalizeForm($data);
         } elseif (FormField::class === $type) {
             return $this->denormalizeFormField($data);
+        } elseif (Person::class === $type) {
+            return $this->denormalizePerson($data);
         } elseif (CatalogUpdate::class === $type) {
             return $this->denormalizeCatalogUpdate($data);
         } elseif (CatalogItem::class === $type) {
@@ -135,9 +191,17 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
     public function getSupportedTypes(?string $format): array
     {
         return [
+            FormTask::class => true,
+            FormTaskCreateField::class => true,
+            Comment::class => true,
+            FormTaskField::class => true,
+            FormTaskCreate::class => true,
+            Approval::class => true,
+            Attachment::class => true,
             PrintForm::class => true,
             Form::class => true,
             FormField::class => true,
+            Person::class => true,
             CatalogUpdate::class => true,
             CatalogItem::class => true,
             CatalogCreate::class => true,
@@ -145,6 +209,115 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             CatalogHeader::class => true,
             CatalogItemCreate::class => true,
             CatalogUpdateResponse::class => true,
+        ];
+    }
+
+    private function normalizeFormTask(FormTask $object): array
+    {
+        $result = [
+            'id' => $object->id,
+            'form_id' => $object->formId,
+            'create_date' => $object->createDate->format('Y-m-d\TH:i:s\Z'),
+            'last_modified_date' => $object->lastModifiedDate->format('Y-m-d\TH:i:s\Z'),
+            'author' => $object->author,
+            'close_date' => $object->closeDate->format('Y-m-d\TH:i:s\Z'),
+            'approvals' => array_map(fn (Approval $val): array => $this->normalizeApproval($val), $object->approvals),
+            'subscribers' => array_map(fn (Approval $val): array => $this->normalizeApproval($val), $object->subscribers),
+            'linked_task_ids' => $object->linkedTaskIds,
+            'attachments' => array_map(fn (Attachment $val): array => $this->normalizeAttachment($val), $object->attachments),
+            'fields' => array_map(fn (FormTaskField $val): array => $this->normalizeFormTaskField($val), $object->fields),
+            'comments' => array_map(fn (Comment $val): array => $this->normalizeComment($val), $object->comments),
+        ];
+
+        if (null !== $object->responsible) {
+            $result['responsible'] = $object->responsible;
+        }
+        if (null !== $object->parentTaskId) {
+            $result['parent_task_id'] = $object->parentTaskId;
+        }
+
+        return $result;
+    }
+
+    private function normalizeFormTaskCreateField(FormTaskCreateField $object): array
+    {
+        return [
+            'id' => $object->id,
+        ];
+    }
+
+    private function normalizeComment(Comment $object): array
+    {
+        return [
+            'id' => $object->id,
+            'text' => $object->text,
+            'create_date' => $object->createDate->format('Y-m-d\TH:i:s\Z'),
+            'author' => $object->author,
+        ];
+    }
+
+    private function normalizeFormTaskField(FormTaskField $object): array
+    {
+        return [
+            'id' => $object->id,
+            'type' => $object->type,
+            'name' => $object->name,
+            'code' => $object->code,
+        ];
+    }
+
+    private function normalizeFormTaskCreate(FormTaskCreate $object): array
+    {
+        $result = [
+            'form_id' => $object->formId,
+            'fields' => array_map(fn (FormTaskCreateField $val): array => $this->normalizeFormTaskCreateField($val), $object->fields),
+            'attachments' => $object->attachments,
+            'subscribers' => $object->subscribers,
+            'list_ids' => $object->listIds,
+            'approvals' => $object->approvals,
+            'fill_defaults' => $object->fillDefaults,
+        ];
+
+        if (null !== $object->dueDate) {
+            $result['due_date'] = $object->dueDate->format('Y-m-d\TH:i:s\Z');
+        }
+        if (null !== $object->due) {
+            $result['due'] = $object->due;
+        }
+        if (null !== $object->duration) {
+            $result['duration'] = $object->duration;
+        }
+        if (null !== $object->parentTaskId) {
+            $result['parent_task_id'] = $object->parentTaskId;
+        }
+        if (null !== $object->scheduledDate) {
+            $result['scheduled_date'] = $object->scheduledDate->format('Y-m-d\TH:i:s\Z');
+        }
+        if (null !== $object->scheduledDatetimeUtc) {
+            $result['scheduled_datetime_utc'] = $object->scheduledDatetimeUtc->format('Y-m-d\TH:i:s\Z');
+        }
+
+        return $result;
+    }
+
+    private function normalizeApproval(Approval $object): array
+    {
+        return [
+            'person' => $object->person,
+            'approval_choice' => $object->approvalChoice,
+        ];
+    }
+
+    private function normalizeAttachment(Attachment $object): array
+    {
+        return [
+            'id' => $object->id,
+            'name' => $object->name,
+            'size' => $object->size,
+            'md5' => $object->md5,
+            'url' => $object->url,
+            'version' => $object->version,
+            'root_id' => $object->rootId,
         ];
     }
 
@@ -176,6 +349,17 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             'name' => $object->name,
             'tooltip' => $object->tooltip,
             'info' => $object->info,
+        ];
+    }
+
+    private function normalizePerson(Person $object): array
+    {
+        return [
+            'id' => $object->id,
+            'first_name' => $object->firstName,
+            'last_name' => $object->lastName,
+            'email' => $object->email,
+            'type' => $object->type,
         ];
     }
 
@@ -247,6 +431,116 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
     /**
      * @psalm-suppress MixedArgumentTypeCoercion
      */
+    private function denormalizeFormTask(array $data): FormTask
+    {
+        return new FormTask(
+            (int) ($data['id'] ?? 0),
+            (int) ($data['form_id'] ?? 0),
+            new \DateTimeImmutable((string) ($data['create_date'] ?? '')),
+            new \DateTimeImmutable((string) ($data['last_modified_date'] ?? '')),
+            $this->denormalizePerson((array) ($data['author'] ?? [])),
+            new \DateTimeImmutable((string) ($data['close_date'] ?? '')),
+            isset($data['responsible']) ? $this->denormalizePerson((array) ($data['responsible'] ?? [])) : null,
+            array_map(fn (array $val): Approval => $this->denormalizeApproval($val), (array) ($data['approvals'] ?? [])),
+            array_map(fn (array $val): Approval => $this->denormalizeApproval($val), (array) ($data['subscribers'] ?? [])),
+            isset($data['parent_task_id']) ? (int) ($data['parent_task_id'] ?? 0) : null,
+            array_map(fn (mixed $val): int => (int) $val, (array) ($data['linked_task_ids'] ?? [])),
+            array_map(fn (array $val): Attachment => $this->denormalizeAttachment($val), (array) ($data['attachments'] ?? [])),
+            array_map(fn (array $val): FormTaskField => $this->denormalizeFormTaskField($val), (array) ($data['fields'] ?? [])),
+            array_map(fn (array $val): Comment => $this->denormalizeComment($val), (array) ($data['comments'] ?? [])),
+        );
+    }
+
+    /**
+     * @psalm-suppress MixedArgumentTypeCoercion
+     */
+    private function denormalizeFormTaskCreateField(array $data): FormTaskCreateField
+    {
+        return new FormTaskCreateField(
+            (int) ($data['id'] ?? 0),
+            $data['value'] ?? null,
+        );
+    }
+
+    /**
+     * @psalm-suppress MixedArgumentTypeCoercion
+     */
+    private function denormalizeComment(array $data): Comment
+    {
+        return new Comment(
+            (int) ($data['id'] ?? 0),
+            (string) ($data['text'] ?? ''),
+            new \DateTimeImmutable((string) ($data['create_date'] ?? '')),
+            $this->denormalizePerson((array) ($data['author'] ?? [])),
+        );
+    }
+
+    /**
+     * @psalm-suppress MixedArgumentTypeCoercion
+     */
+    private function denormalizeFormTaskField(array $data): FormTaskField
+    {
+        return new FormTaskField(
+            (int) ($data['id'] ?? 0),
+            (string) ($data['type'] ?? ''),
+            (string) ($data['name'] ?? ''),
+            (string) ($data['code'] ?? ''),
+            $data['value'] ?? null,
+        );
+    }
+
+    /**
+     * @psalm-suppress MixedArgumentTypeCoercion
+     */
+    private function denormalizeFormTaskCreate(array $data): FormTaskCreate
+    {
+        return new FormTaskCreate(
+            (int) ($data['form_id'] ?? 0),
+            array_map(fn (array $val): FormTaskCreateField => $this->denormalizeFormTaskCreateField($val), (array) ($data['fields'] ?? [])),
+            array_map(fn (mixed $val): int => (int) $val, (array) ($data['attachments'] ?? [])),
+            isset($data['due_date']) ? new \DateTimeImmutable((string) ($data['due_date'] ?? '')) : null,
+            isset($data['due']) ? (string) ($data['due'] ?? '') : null,
+            isset($data['duration']) ? (int) ($data['duration'] ?? 0) : null,
+            array_map(fn (mixed $val): int => (int) $val, (array) ($data['subscribers'] ?? [])),
+            isset($data['parent_task_id']) ? (int) ($data['parent_task_id'] ?? 0) : null,
+            array_map(fn (mixed $val): int => (int) $val, (array) ($data['list_ids'] ?? [])),
+            isset($data['scheduled_date']) ? new \DateTimeImmutable((string) ($data['scheduled_date'] ?? '')) : null,
+            isset($data['scheduled_datetime_utc']) ? new \DateTimeImmutable((string) ($data['scheduled_datetime_utc'] ?? '')) : null,
+            array_map(fn (mixed $val): int => (int) $val, (array) ($data['approvals'] ?? [])),
+            (bool) ($data['fill_defaults'] ?? false),
+        );
+    }
+
+    /**
+     * @psalm-suppress MixedArgumentTypeCoercion
+     */
+    private function denormalizeApproval(array $data): Approval
+    {
+        return new Approval(
+            $this->denormalizePerson((array) ($data['person'] ?? [])),
+            (string) ($data['approval_choice'] ?? ''),
+        );
+    }
+
+    /**
+     * @psalm-suppress MixedArgumentTypeCoercion
+     */
+    private function denormalizeAttachment(array $data): Attachment
+    {
+        return new Attachment(
+            (int) ($data['id'] ?? 0),
+            (string) ($data['name'] ?? ''),
+            (int) ($data['size'] ?? 0),
+            (string) ($data['md5'] ?? ''),
+            (string) ($data['url'] ?? ''),
+            (int) ($data['version'] ?? 0),
+            (int) ($data['root_id'] ?? 0),
+        );
+    }
+
+    /**
+     * @psalm-suppress MixedArgumentTypeCoercion
+     */
     private function denormalizePrintForm(array $data): PrintForm
     {
         return new PrintForm(
@@ -281,6 +575,20 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             (string) ($data['name'] ?? ''),
             (string) ($data['tooltip'] ?? ''),
             (array) ($data['info'] ?? []),
+        );
+    }
+
+    /**
+     * @psalm-suppress MixedArgumentTypeCoercion
+     */
+    private function denormalizePerson(array $data): Person
+    {
+        return new Person(
+            (int) ($data['id'] ?? 0),
+            (string) ($data['first_name'] ?? ''),
+            (string) ($data['last_name'] ?? ''),
+            (string) ($data['email'] ?? ''),
+            (string) ($data['type'] ?? ''),
         );
     }
 
