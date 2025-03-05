@@ -30,11 +30,7 @@ final class PyrusSymfonyHttpTransport implements PyrusTransport
      */
     public function request(PyrusRequest $request, ?PyrusClientOptions $options = null): PyrusResponse
     {
-        $symfonyOptions = [];
-
-        if (!empty($request->headers)) {
-            $symfonyOptions['headers'] = $request->headers;
-        }
+        $symfonyOptions = $this->prepareBaseSymfonyOptions($request, $options);
 
         if (null !== $request->payload && !empty($request->payload)) {
             if (PyrusRequestMethod::GET === $request->method) {
@@ -44,14 +40,50 @@ final class PyrusSymfonyHttpTransport implements PyrusTransport
             }
         }
 
+        return $this->runSymfonyRequest($request, $symfonyOptions);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function uploadFile(PyrusRequest $request, \SplFileInfo $file, ?PyrusClientOptions $options = null): PyrusResponse
+    {
+        $symfonyOptions = $this->prepareBaseSymfonyOptions($request, $options);
+
+        $symfonyOptions['body'] = [
+            'file' => $file->openFile(),
+        ];
+
+        return $this->runSymfonyRequest($request, $symfonyOptions);
+    }
+
+    /**
+     * Extract array with base options for Symfony HTTP client.
+     */
+    private function prepareBaseSymfonyOptions(PyrusRequest $request, ?PyrusClientOptions $options = null): array
+    {
+        $symfonyOptions = [];
+
+        if (!empty($request->headers)) {
+            $symfonyOptions['headers'] = $request->headers;
+        }
+
         if (null !== $options) {
             $symfonyOptions['max_duration'] = $options->timeout;
         }
 
+        return $symfonyOptions;
+    }
+
+    /**
+     * Run request using Symfony HTTP client.
+     */
+    private function runSymfonyRequest(PyrusRequest $request, array $options = []): PyrusResponse
+    {
         $response = $this->symfonyTransport->request(
             $request->method->value,
             $request->url,
-            $symfonyOptions
+            $options
         );
 
         return new PyrusResponse(

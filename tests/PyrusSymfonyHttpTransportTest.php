@@ -82,8 +82,8 @@ final class PyrusSymfonyHttpTransportTest extends BaseCase
                 new PyrusClientOptions(),
                 [
                     'headers' => $headers,
-                    'query' => $payload,
                     'max_duration' => PyrusClientOptions::DEFAULT_TIMEOUT,
+                    'query' => $payload,
                 ],
                 200,
                 'test content',
@@ -106,6 +106,67 @@ final class PyrusSymfonyHttpTransportTest extends BaseCase
             ],
             'post request with empty array payload' => [
                 new PyrusRequest(PyrusRequestMethod::POST, $url, []),
+                null,
+                [],
+                200,
+                'test content',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideUploadFile
+     */
+    public function testUploadFile(PyrusRequest $request, ?PyrusClientOptions $requestOptions, array $symfonyOptions, int $statusCode, string $content): void
+    {
+        $symfonyResponse = $this->mock(ResponseInterface::class);
+        $symfonyResponse->expects($this->atLeastOnce())->method('getStatusCode')->willReturn($statusCode);
+        $symfonyResponse->expects($this->atLeastOnce())->method('getContent')->willReturn($content);
+
+        $fileObject = new \SplFileObject('php://memory');
+        $fileInfo = $this->mock(\SplFileInfo::class);
+        $fileInfo->expects($this->any())->method('openFile')->willReturn($fileObject);
+
+        $symfonyOptions['body'] = [
+            'file' => $fileObject,
+        ];
+
+        $symfonyTransport = $this->mock(HttpClientInterface::class);
+        $symfonyTransport->expects($this->once())
+            ->method('request')
+            ->with(
+                $this->identicalTo($request->method->value),
+                $this->identicalTo($request->url),
+                $this->identicalTo($symfonyOptions)
+            )
+            ->willReturn($symfonyResponse);
+
+        $transport = new PyrusSymfonyHttpTransport($symfonyTransport);
+        $response = $transport->uploadFile($request, $fileInfo, $requestOptions);
+
+        $this->assertSame($statusCode, $response->status->value);
+        $this->assertSame($content, $response->payload);
+    }
+
+    public static function provideUploadFile(): array
+    {
+        $url = 'http://test.get';
+        $headers = [
+            'header_param' => 'header value',
+        ];
+
+        return [
+            'get request' => [
+                new PyrusRequest(PyrusRequestMethod::GET, $url, null, $headers),
+                null,
+                [
+                    'headers' => $headers,
+                ],
+                200,
+                'test content',
+            ],
+            'post request' => [
+                new PyrusRequest(PyrusRequestMethod::POST, $url),
                 null,
                 [],
                 200,
