@@ -84,6 +84,13 @@ services:
     tags: 
       - { name: 'pyrus_client_symfony.field_extractor', priority: 2000 }
 
+  SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderFile:
+    class: SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderFile
+    arguments:
+      - '%suare_su_pyrus_client_symfony.path_to_save_uploaded_files%'
+    tags: 
+      - { name: 'pyrus_client_symfony.field_extractor', priority: 2000 }
+
   SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderDefault:
     class: SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderDefault
     tags: 

@@ -28,6 +28,7 @@ class SuareSuPyrusClientSymfonyBundle extends AbstractBundle
         $definition->rootNode()
             ->children()
                 ->booleanNode('ignore_unknown_types')->defaultFalse()->end()
+                ->scalarNode('path_to_save_uploaded_files')->defaultValue('%kernel.project_dir%/var')->end()
             ->end()
         ;
     }
@@ -39,7 +40,15 @@ class SuareSuPyrusClientSymfonyBundle extends AbstractBundle
     {
         $container->import(self::SERVICES_YAML);
 
-        $container->parameters()->set(self::BUNDLE_ID . '.ignore_unknown_types', $config['ignore_unknown_types']);
+        $container->parameters()->set(
+            self::BUNDLE_ID . '.ignore_unknown_types',
+            $config['ignore_unknown_types']
+        );
+
+        $container->parameters()->set(
+            self::BUNDLE_ID . '.path_to_save_uploaded_files',
+            $config['path_to_save_uploaded_files']
+        );
     }
 
     /**
