@@ -28,7 +28,7 @@ class SuareSuPyrusClientSymfonyBundle extends AbstractBundle
         $definition->rootNode()
             ->children()
                 ->booleanNode('ignore_unknown_types')->defaultFalse()->end()
-                ->scalarNode('path_to_save_uploaded_files')->defaultValue('')->end()
+                ->scalarNode('path_to_save_uploaded_files')->defaultValue('%kernel.project_dir%')->end()
             ->end()
         ;
     }
@@ -45,10 +45,9 @@ class SuareSuPyrusClientSymfonyBundle extends AbstractBundle
             $config['ignore_unknown_types']
         );
 
-        $projectDir = $container->getParameter('kernel.project_dir');
         $container->parameters()->set(
             self::BUNDLE_ID . '.path_to_save_uploaded_files',
-            '' === $config['path_to_save_uploaded_files'] ? "{$projectDir}/var" : $config['path_to_save_uploaded_files']
+            $config['path_to_save_uploaded_files']
         );
     }
 
