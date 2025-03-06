@@ -28,7 +28,7 @@ class SuareSuPyrusClientSymfonyBundle extends AbstractBundle
         $definition->rootNode()
             ->children()
                 ->booleanNode('ignore_unknown_types')->defaultFalse()->end()
-                ->scalarNode('path_to_save_uploaded_files')->defaultValue('%kernel.project_dir%')->end()
+                ->scalarNode('path_to_save_uploaded_files')->defaultValue('%kernel.project_dir%/var')->end()
             ->end()
         ;
     }
