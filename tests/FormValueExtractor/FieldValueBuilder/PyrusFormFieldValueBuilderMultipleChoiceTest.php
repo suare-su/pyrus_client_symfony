@@ -49,10 +49,11 @@ final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusFo
 
     /**
      * @test
+     *
+     * @dataProvider provideBuild
      */
-    public function testBuild(): void
+    public function testBuild(mixed $value, ?array $expected): void
     {
-        $value = '1';
         $fieldId = 321;
         $field = $this->createPyrusFieldMock(
             [
@@ -65,27 +66,24 @@ final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusFo
         $res = $builder->build($field, $value);
 
         $this->assertSame($fieldId, $res->id);
-        $this->assertSame(['choice_ids' => [$value]], $res->value);
+        $this->assertSame($expected, $res->value);
     }
 
-    /**
-     * @test
-     */
-    public function testBuildArrayValue(): void
+    public static function provideBuild(): array
     {
-        $value = ['1', '2'];
-        $fieldId = 321;
-        $field = $this->createPyrusFieldMock(
-            [
-                'id' => $fieldId,
-                'type' => FormFieldType::MULTIPLE_CHOICE,
-            ]
-        );
-
-        $builder = new PyrusFormFieldValueBuilderMultipleChoice();
-        $res = $builder->build($field, $value);
-
-        $this->assertSame($fieldId, $res->id);
-        $this->assertSame(['choice_ids' => $value], $res->value);
+        return [
+            'scalar' => [
+                '1',
+                ['choice_ids' => ['1']],
+            ],
+            'array' => [
+                ['1', '2'],
+                ['choice_ids' => ['1', '2']],
+            ],
+            'null' => [
+                null,
+                null,
+            ],
+        ];
     }
 }

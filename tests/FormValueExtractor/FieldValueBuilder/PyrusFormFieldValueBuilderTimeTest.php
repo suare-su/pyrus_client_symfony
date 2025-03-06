@@ -49,15 +49,16 @@ final class PyrusFormFieldValueBuilderTimeTest extends BaseCasePyrusForm
 
     /**
      * @test
+     *
+     * @dataProvider provideBuild
      */
-    public function testBuild(): void
+    public function testBuild(?\DateTimeInterface $value, ?string $expected): void
     {
-        $value = new \DateTimeImmutable();
         $fieldId = 321;
         $field = $this->createPyrusFieldMock(
             [
                 'id' => $fieldId,
-                'type' => FormFieldType::TIME,
+                'type' => FormFieldType::DATE,
             ]
         );
 
@@ -65,27 +66,20 @@ final class PyrusFormFieldValueBuilderTimeTest extends BaseCasePyrusForm
         $res = $builder->build($field, $value);
 
         $this->assertSame($fieldId, $res->id);
-        $this->assertSame($value->format('H:i'), $res->value);
+        $this->assertSame($expected, $res->value);
     }
 
-    /**
-     * @test
-     */
-    public function testBuildNull(): void
+    public static function provideBuild(): array
     {
-        $value = null;
-        $fieldId = 321;
-        $field = $this->createPyrusFieldMock(
-            [
-                'id' => $fieldId,
-                'type' => FormFieldType::TIME,
-            ]
-        );
-
-        $builder = new PyrusFormFieldValueBuilderTime();
-        $res = $builder->build($field, $value);
-
-        $this->assertSame($fieldId, $res->id);
-        $this->assertNull($res->value);
+        return [
+            'time' => [
+                new \DateTimeImmutable('2025-10-10 10:10'),
+                '10:10',
+            ],
+            'null' => [
+                null,
+                null,
+            ],
+        ];
     }
 }

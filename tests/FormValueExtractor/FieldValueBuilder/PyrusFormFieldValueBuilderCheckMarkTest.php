@@ -49,10 +49,11 @@ final class PyrusFormFieldValueBuilderCheckMarkTest extends BaseCasePyrusForm
 
     /**
      * @test
+     *
+     * @dataProvider provideBuild
      */
-    public function testBuildTrue(): void
+    public function testBuild(mixed $value, ?string $expected): void
     {
-        $value = true;
         $fieldId = 321;
         $field = $this->createPyrusFieldMock(
             [
@@ -65,27 +66,28 @@ final class PyrusFormFieldValueBuilderCheckMarkTest extends BaseCasePyrusForm
         $res = $builder->build($field, $value);
 
         $this->assertSame($fieldId, $res->id);
-        $this->assertSame('checked', $res->value);
+        $this->assertSame($expected, $res->value);
     }
 
-    /**
-     * @test
-     */
-    public function testBuildFalse(): void
+    public static function provideBuild(): array
     {
-        $value = false;
-        $fieldId = 321;
-        $field = $this->createPyrusFieldMock(
-            [
-                'id' => $fieldId,
-                'type' => FormFieldType::CHECKMARK,
-            ]
-        );
-
-        $builder = new PyrusFormFieldValueBuilderCheckMark();
-        $res = $builder->build($field, $value);
-
-        $this->assertSame($fieldId, $res->id);
-        $this->assertSame('unchecked', $res->value);
+        return [
+            'true' => [
+                true,
+                'checked',
+            ],
+            'false' => [
+                false,
+                'unchecked',
+            ],
+            'null' => [
+                null,
+                'unchecked',
+            ],
+            'random string' => [
+                'asdasd',
+                'unchecked',
+            ],
+        ];
     }
 }

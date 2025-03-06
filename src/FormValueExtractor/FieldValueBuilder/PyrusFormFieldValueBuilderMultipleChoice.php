@@ -28,6 +28,10 @@ final class PyrusFormFieldValueBuilderMultipleChoice implements PyrusFormFieldVa
      */
     public function build(FormField $field, mixed $value): FormTaskCreateField
     {
+        if (null === $value) {
+            return new FormTaskCreateField($field->id, null);
+        }
+
         return new FormTaskCreateField(
             $field->id,
             [
