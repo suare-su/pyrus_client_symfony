@@ -9,18 +9,18 @@ use SuareSu\PyrusClient\Entity\Form\FormFieldType;
 use SuareSu\PyrusClient\Entity\Task\FormTaskCreateField;
 
 /**
- * Convert multiple_choice field value.
+ * Convert checkmarks value.
  *
  * @psalm-api
  */
-final class PyrusFormFieldValueBuilderMultipleChoice implements PyrusFormFieldValueBuilder
+final class PyrusFormFieldValueBuilderCheckMark implements PyrusFormFieldValueBuilder
 {
     /**
      * {@inheritdoc}
      */
     public function supports(FormField $field, mixed $value): bool
     {
-        return FormFieldType::MULTIPLE_CHOICE === $field->type;
+        return FormFieldType::CHECKMARK === $field->type;
     }
 
     /**
@@ -28,11 +28,8 @@ final class PyrusFormFieldValueBuilderMultipleChoice implements PyrusFormFieldVa
      */
     public function build(FormField $field, mixed $value): FormTaskCreateField
     {
-        return new FormTaskCreateField(
-            $field->id,
-            [
-                'choice_ids' => \is_array($value) ? $value : [$value],
-            ]
-        );
+        $boolValue = true === $value ? 'checked' : 'unchecked';
+
+        return new FormTaskCreateField($field->id, $boolValue);
     }
 }
