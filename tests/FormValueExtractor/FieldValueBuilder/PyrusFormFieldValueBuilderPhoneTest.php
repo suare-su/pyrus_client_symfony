@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace SuareSu\PyrusClientSymfony\Tests\FormValueExtractor\FieldValueBuilder;
 
 use SuareSu\PyrusClient\Entity\Form\FormFieldType;
-use SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderMultipleChoice;
+use SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderPhone;
 use SuareSu\PyrusClientSymfony\Tests\BaseCasePyrusForm;
 
 /**
  * @internal
  */
-final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusForm
+final class PyrusFormFieldValueBuilderPhoneTest extends BaseCasePyrusForm
 {
     /**
      * @test
@@ -27,7 +27,7 @@ final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusFo
             ]
         );
 
-        $builder = new PyrusFormFieldValueBuilderMultipleChoice();
+        $builder = new PyrusFormFieldValueBuilderPhone();
         $res = $builder->supports($field, $value);
 
         $this->assertSame($expected, $res);
@@ -37,11 +37,11 @@ final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusFo
     {
         return [
             'supports' => [
-                FormFieldType::MULTIPLE_CHOICE,
+                FormFieldType::PHONE,
                 true,
             ],
             "doesn't support" => [
-                FormFieldType::TIME,
+                FormFieldType::MULTIPLE_CHOICE,
                 false,
             ],
         ];
@@ -52,17 +52,17 @@ final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusFo
      *
      * @dataProvider provideBuild
      */
-    public function testBuild(mixed $value, ?array $expected): void
+    public function testBuild(?string $value, ?string $expected): void
     {
         $fieldId = 321;
         $field = $this->createPyrusFieldMock(
             [
                 'id' => $fieldId,
-                'type' => FormFieldType::MULTIPLE_CHOICE,
+                'type' => FormFieldType::PHONE,
             ]
         );
 
-        $builder = new PyrusFormFieldValueBuilderMultipleChoice();
+        $builder = new PyrusFormFieldValueBuilderPhone();
         $res = $builder->build($field, $value);
 
         $this->assertSame($fieldId, $res->id);
@@ -72,13 +72,21 @@ final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusFo
     public static function provideBuild(): array
     {
         return [
-            'scalar' => [
-                '1',
-                ['choice_ids' => ['1']],
+            'phone number' => [
+                '79998881414',
+                '+7 999 888 1414',
             ],
-            'array' => [
-                ['1', '2'],
-                ['choice_ids' => ['1', '2']],
+            'longer phone number' => [
+                '79998881414999',
+                '+7 999 888 1414999',
+            ],
+            'broken phone number begin' => [
+                'a79998881414',
+                'a79998881414',
+            ],
+            'broken phone number end' => [
+                '79998881414b',
+                '79998881414b',
             ],
             'null' => [
                 null,

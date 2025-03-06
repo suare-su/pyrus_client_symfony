@@ -5,21 +5,22 @@ declare(strict_types=1);
 namespace SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder;
 
 use SuareSu\PyrusClient\Entity\Form\FormField;
+use SuareSu\PyrusClient\Entity\Form\FormFieldType;
 use SuareSu\PyrusClient\Entity\Task\FormTaskCreateField;
 
 /**
- * Convert all field types to standard object.
+ * Convert checkmark value.
  *
  * @psalm-api
  */
-final class PyrusFormFieldValueBuilderDefault implements PyrusFormFieldValueBuilder
+final class PyrusFormFieldValueBuilderCheckMark implements PyrusFormFieldValueBuilder
 {
     /**
      * {@inheritdoc}
      */
     public function supports(FormField $field, mixed $value): bool
     {
-        return true;
+        return FormFieldType::CHECKMARK === $field->type;
     }
 
     /**
@@ -27,6 +28,8 @@ final class PyrusFormFieldValueBuilderDefault implements PyrusFormFieldValueBuil
      */
     public function build(FormField $field, mixed $value): FormTaskCreateField
     {
-        return new FormTaskCreateField($field->id, $value);
+        $boolValue = true === $value ? 'checked' : 'unchecked';
+
+        return new FormTaskCreateField($field->id, $boolValue);
     }
 }

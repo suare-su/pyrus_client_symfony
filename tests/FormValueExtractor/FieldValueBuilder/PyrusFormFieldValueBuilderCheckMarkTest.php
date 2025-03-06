@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace SuareSu\PyrusClientSymfony\Tests\FormValueExtractor\FieldValueBuilder;
 
 use SuareSu\PyrusClient\Entity\Form\FormFieldType;
-use SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderMultipleChoice;
+use SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderCheckMark;
 use SuareSu\PyrusClientSymfony\Tests\BaseCasePyrusForm;
 
 /**
  * @internal
  */
-final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusForm
+final class PyrusFormFieldValueBuilderCheckMarkTest extends BaseCasePyrusForm
 {
     /**
      * @test
@@ -27,7 +27,7 @@ final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusFo
             ]
         );
 
-        $builder = new PyrusFormFieldValueBuilderMultipleChoice();
+        $builder = new PyrusFormFieldValueBuilderCheckMark();
         $res = $builder->supports($field, $value);
 
         $this->assertSame($expected, $res);
@@ -37,7 +37,7 @@ final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusFo
     {
         return [
             'supports' => [
-                FormFieldType::MULTIPLE_CHOICE,
+                FormFieldType::CHECKMARK,
                 true,
             ],
             "doesn't support" => [
@@ -52,17 +52,17 @@ final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusFo
      *
      * @dataProvider provideBuild
      */
-    public function testBuild(mixed $value, ?array $expected): void
+    public function testBuild(mixed $value, ?string $expected): void
     {
         $fieldId = 321;
         $field = $this->createPyrusFieldMock(
             [
                 'id' => $fieldId,
-                'type' => FormFieldType::MULTIPLE_CHOICE,
+                'type' => FormFieldType::CHECKMARK,
             ]
         );
 
-        $builder = new PyrusFormFieldValueBuilderMultipleChoice();
+        $builder = new PyrusFormFieldValueBuilderCheckMark();
         $res = $builder->build($field, $value);
 
         $this->assertSame($fieldId, $res->id);
@@ -72,17 +72,21 @@ final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusFo
     public static function provideBuild(): array
     {
         return [
-            'scalar' => [
-                '1',
-                ['choice_ids' => ['1']],
+            'true' => [
+                true,
+                'checked',
             ],
-            'array' => [
-                ['1', '2'],
-                ['choice_ids' => ['1', '2']],
+            'false' => [
+                false,
+                'unchecked',
             ],
             'null' => [
                 null,
-                null,
+                'unchecked',
+            ],
+            'random string' => [
+                'asdasd',
+                'unchecked',
             ],
         ];
     }

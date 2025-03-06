@@ -17,40 +17,37 @@ final class PyrusFormFieldValueBuilderFileTest extends BaseCasePyrusForm
 {
     /**
      * @test
+     *
+     * @dataProvider provideSupports
      */
-    public function testSupports(): void
+    public function testSupports(FormFieldType $type, bool $expected): void
     {
         $path = '/test/';
-        $value = $this->mock(UploadedFile::class);
+        $value = null;
         $field = $this->createPyrusFieldMock(
             [
-                'type' => FormFieldType::FILE,
+                'type' => $type,
             ]
         );
 
         $builder = new PyrusFormFieldValueBuilderFile($path);
         $res = $builder->supports($field, $value);
 
-        $this->assertTrue($res);
+        $this->assertSame($expected, $res);
     }
 
-    /**
-     * @test
-     */
-    public function testDoesntSupport(): void
+    public static function provideSupports(): array
     {
-        $path = '/test/';
-        $value = $this->mock(UploadedFile::class);
-        $field = $this->createPyrusFieldMock(
-            [
-                'type' => FormFieldType::MULTIPLE_CHOICE,
-            ]
-        );
-
-        $builder = new PyrusFormFieldValueBuilderFile($path);
-        $res = $builder->supports($field, $value);
-
-        $this->assertFalse($res);
+        return [
+            'supports' => [
+                FormFieldType::FILE,
+                true,
+            ],
+            "doesn't support" => [
+                FormFieldType::TIME,
+                false,
+            ],
+        ];
     }
 
     /**

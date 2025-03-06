@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace SuareSu\PyrusClientSymfony\Tests\FormValueExtractor\FieldValueBuilder;
 
 use SuareSu\PyrusClient\Entity\Form\FormFieldType;
-use SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderMultipleChoice;
+use SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderDate;
 use SuareSu\PyrusClientSymfony\Tests\BaseCasePyrusForm;
 
 /**
  * @internal
  */
-final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusForm
+final class PyrusFormFieldValueBuilderDateTest extends BaseCasePyrusForm
 {
     /**
      * @test
@@ -27,7 +27,7 @@ final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusFo
             ]
         );
 
-        $builder = new PyrusFormFieldValueBuilderMultipleChoice();
+        $builder = new PyrusFormFieldValueBuilderDate();
         $res = $builder->supports($field, $value);
 
         $this->assertSame($expected, $res);
@@ -36,8 +36,12 @@ final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusFo
     public static function provideSupports(): array
     {
         return [
-            'supports' => [
-                FormFieldType::MULTIPLE_CHOICE,
+            'supports date' => [
+                FormFieldType::DATE,
+                true,
+            ],
+            'supports due date' => [
+                FormFieldType::DUE_DATE,
                 true,
             ],
             "doesn't support" => [
@@ -52,17 +56,17 @@ final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusFo
      *
      * @dataProvider provideBuild
      */
-    public function testBuild(mixed $value, ?array $expected): void
+    public function testBuild(?\DateTimeInterface $value, ?string $expected): void
     {
         $fieldId = 321;
         $field = $this->createPyrusFieldMock(
             [
                 'id' => $fieldId,
-                'type' => FormFieldType::MULTIPLE_CHOICE,
+                'type' => FormFieldType::DATE,
             ]
         );
 
-        $builder = new PyrusFormFieldValueBuilderMultipleChoice();
+        $builder = new PyrusFormFieldValueBuilderDate();
         $res = $builder->build($field, $value);
 
         $this->assertSame($fieldId, $res->id);
@@ -72,13 +76,9 @@ final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusFo
     public static function provideBuild(): array
     {
         return [
-            'scalar' => [
-                '1',
-                ['choice_ids' => ['1']],
-            ],
-            'array' => [
-                ['1', '2'],
-                ['choice_ids' => ['1', '2']],
+            'date' => [
+                new \DateTimeImmutable('2025-10-10'),
+                '2025-10-10',
             ],
             'null' => [
                 null,
