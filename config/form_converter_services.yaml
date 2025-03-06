@@ -82,9 +82,9 @@ services:
   SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderMultipleChoice:
     class: SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderMultipleChoice
     tags: 
-      - { name: 'pyrus_client_symfony.field_converter', priority: 2000 }
+      - { name: 'pyrus_client_symfony.field_extractor', priority: 2000 }
 
   SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderDefault:
     class: SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderDefault
     tags: 
-      - { name: 'pyrus_client_symfony.field_converter', priority: 3000 }
+      - { name: 'pyrus_client_symfony.field_extractor', priority: 3000 }
