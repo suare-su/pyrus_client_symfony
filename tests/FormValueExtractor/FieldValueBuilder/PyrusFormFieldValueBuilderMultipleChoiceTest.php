@@ -15,38 +15,36 @@ final class PyrusFormFieldValueBuilderMultipleChoiceTest extends BaseCasePyrusFo
 {
     /**
      * @test
+     *
+     * @dataProvider provideSupports
      */
-    public function testSupports(): void
+    public function testSupports(FormFieldType $type, bool $expected): void
     {
-        $value = '1';
+        $value = null;
         $field = $this->createPyrusFieldMock(
             [
-                'type' => FormFieldType::MULTIPLE_CHOICE,
+                'type' => $type,
             ]
         );
 
         $builder = new PyrusFormFieldValueBuilderMultipleChoice();
         $res = $builder->supports($field, $value);
 
-        $this->assertTrue($res);
+        $this->assertSame($expected, $res);
     }
 
-    /**
-     * @test
-     */
-    public function testDoesntSupport(): void
+    public static function provideSupports(): array
     {
-        $value = '1';
-        $field = $this->createPyrusFieldMock(
-            [
-                'type' => FormFieldType::CATALOG,
-            ]
-        );
-
-        $builder = new PyrusFormFieldValueBuilderMultipleChoice();
-        $res = $builder->supports($field, $value);
-
-        $this->assertFalse($res);
+        return [
+            'supports' => [
+                FormFieldType::MULTIPLE_CHOICE,
+                true,
+            ],
+            "doesn't support" => [
+                FormFieldType::TIME,
+                false,
+            ],
+        ];
     }
 
     /**

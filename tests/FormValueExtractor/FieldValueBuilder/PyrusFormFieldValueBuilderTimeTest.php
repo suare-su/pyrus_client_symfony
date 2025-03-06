@@ -15,38 +15,36 @@ final class PyrusFormFieldValueBuilderTimeTest extends BaseCasePyrusForm
 {
     /**
      * @test
+     *
+     * @dataProvider provideSupports
      */
-    public function testSupportsDate(): void
+    public function testSupports(FormFieldType $type, bool $expected): void
     {
         $value = null;
         $field = $this->createPyrusFieldMock(
             [
-                'type' => FormFieldType::TIME,
+                'type' => $type,
             ]
         );
 
         $builder = new PyrusFormFieldValueBuilderTime();
         $res = $builder->supports($field, $value);
 
-        $this->assertTrue($res);
+        $this->assertSame($expected, $res);
     }
 
-    /**
-     * @test
-     */
-    public function testDoesntSupport(): void
+    public static function provideSupports(): array
     {
-        $value = null;
-        $field = $this->createPyrusFieldMock(
-            [
-                'type' => FormFieldType::MULTIPLE_CHOICE,
-            ]
-        );
-
-        $builder = new PyrusFormFieldValueBuilderTime();
-        $res = $builder->supports($field, $value);
-
-        $this->assertFalse($res);
+        return [
+            'supports' => [
+                FormFieldType::TIME,
+                true,
+            ],
+            "doesn't support" => [
+                FormFieldType::MULTIPLE_CHOICE,
+                false,
+            ],
+        ];
     }
 
     /**

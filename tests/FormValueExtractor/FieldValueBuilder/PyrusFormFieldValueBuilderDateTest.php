@@ -15,56 +15,40 @@ final class PyrusFormFieldValueBuilderDateTest extends BaseCasePyrusForm
 {
     /**
      * @test
+     *
+     * @dataProvider provideSupports
      */
-    public function testSupportsDate(): void
+    public function testSupports(FormFieldType $type, bool $expected): void
     {
         $value = null;
         $field = $this->createPyrusFieldMock(
             [
-                'type' => FormFieldType::DATE,
+                'type' => $type,
             ]
         );
 
         $builder = new PyrusFormFieldValueBuilderDate();
         $res = $builder->supports($field, $value);
 
-        $this->assertTrue($res);
+        $this->assertSame($expected, $res);
     }
 
-    /**
-     * @test
-     */
-    public function testSupportsDueDate(): void
+    public static function provideSupports(): array
     {
-        $value = null;
-        $field = $this->createPyrusFieldMock(
-            [
-                'type' => FormFieldType::DUE_DATE,
-            ]
-        );
-
-        $builder = new PyrusFormFieldValueBuilderDate();
-        $res = $builder->supports($field, $value);
-
-        $this->assertTrue($res);
-    }
-
-    /**
-     * @test
-     */
-    public function testDoesntSupport(): void
-    {
-        $value = null;
-        $field = $this->createPyrusFieldMock(
-            [
-                'type' => FormFieldType::MULTIPLE_CHOICE,
-            ]
-        );
-
-        $builder = new PyrusFormFieldValueBuilderDate();
-        $res = $builder->supports($field, $value);
-
-        $this->assertFalse($res);
+        return [
+            'supports date' => [
+                FormFieldType::DATE,
+                true,
+            ],
+            'supports due date' => [
+                FormFieldType::DUE_DATE,
+                true,
+            ],
+            "doesn't support" => [
+                FormFieldType::TIME,
+                false,
+            ],
+        ];
     }
 
     /**

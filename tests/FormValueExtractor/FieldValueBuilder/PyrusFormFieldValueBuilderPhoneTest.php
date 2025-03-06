@@ -15,7 +15,7 @@ final class PyrusFormFieldValueBuilderPhoneTest extends BaseCasePyrusForm
 {
     /**
      * @test
-     * 
+     *
      * @dataProvider provideSupports
      */
     public function testSupports(FormFieldType $type, bool $expected): void
@@ -36,20 +36,20 @@ final class PyrusFormFieldValueBuilderPhoneTest extends BaseCasePyrusForm
     public static function provideSupports(): array
     {
         return [
-            "supports" => [
+            'supports' => [
                 FormFieldType::PHONE,
-                true
+                true,
             ],
             "doesn't support" => [
                 FormFieldType::MULTIPLE_CHOICE,
-                false
+                false,
             ],
         ];
     }
 
     /**
      * @test
-     * 
+     *
      * @dataProvider provideBuild
      */
     public function testBuild(?string $value, ?string $expected): void
@@ -72,11 +72,23 @@ final class PyrusFormFieldValueBuilderPhoneTest extends BaseCasePyrusForm
     public static function provideBuild(): array
     {
         return [
-            "phone number" => [
+            'phone number' => [
                 '79998881414',
-                '+7 999 888 1414'
+                '+7 999 888 1414',
             ],
-            "null" => [
+            'longer phone number' => [
+                '79998881414999',
+                '+7 999 888 1414999',
+            ],
+            'broken phone number begin' => [
+                'a79998881414',
+                'a79998881414',
+            ],
+            'broken phone number end' => [
+                '79998881414b',
+                '79998881414b',
+            ],
+            'null' => [
                 null,
                 null,
             ],
