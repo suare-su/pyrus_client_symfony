@@ -29,9 +29,10 @@ final class PyrusFormFieldValueBuilderDateTime implements PyrusFormFieldValueBui
     public function build(FormField $field, mixed $value): FormTaskCreateField
     {
         if ($value instanceof \DateTimeInterface) {
-            $stringValue = $value->format('Y-m-d\TH:i:s\Z');
-
-            return new FormTaskCreateField($field->id, $stringValue);
+            return new FormTaskCreateField(
+                $field->id,
+                $value->format('Y-m-d\TH:i:s\Z')
+            );
         }
 
         return new FormTaskCreateField($field->id, null);

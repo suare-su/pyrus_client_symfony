@@ -5,27 +5,27 @@ declare(strict_types=1);
 namespace SuareSu\PyrusClientSymfony\Tests\FormValueExtractor\FieldValueBuilder;
 
 use SuareSu\PyrusClient\Entity\Form\FormFieldType;
-use SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderDateTime;
+use SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderTime;
 use SuareSu\PyrusClientSymfony\Tests\BaseCasePyrusForm;
 
 /**
  * @internal
  */
-final class PyrusFormFieldValueBuilderDateTimeTest extends BaseCasePyrusForm
+final class PyrusFormFieldValueBuilderTimeTest extends BaseCasePyrusForm
 {
     /**
      * @test
      */
-    public function testSupports(): void
+    public function testSupportsDate(): void
     {
         $value = null;
         $field = $this->createPyrusFieldMock(
             [
-                'type' => FormFieldType::DUE_DATE_TIME,
+                'type' => FormFieldType::TIME,
             ]
         );
 
-        $builder = new PyrusFormFieldValueBuilderDateTime();
+        $builder = new PyrusFormFieldValueBuilderTime();
         $res = $builder->supports($field, $value);
 
         $this->assertTrue($res);
@@ -43,7 +43,7 @@ final class PyrusFormFieldValueBuilderDateTimeTest extends BaseCasePyrusForm
             ]
         );
 
-        $builder = new PyrusFormFieldValueBuilderDateTime();
+        $builder = new PyrusFormFieldValueBuilderTime();
         $res = $builder->supports($field, $value);
 
         $this->assertFalse($res);
@@ -59,15 +59,15 @@ final class PyrusFormFieldValueBuilderDateTimeTest extends BaseCasePyrusForm
         $field = $this->createPyrusFieldMock(
             [
                 'id' => $fieldId,
-                'type' => FormFieldType::DUE_DATE_TIME,
+                'type' => FormFieldType::TIME,
             ]
         );
 
-        $builder = new PyrusFormFieldValueBuilderDateTime();
+        $builder = new PyrusFormFieldValueBuilderTime();
         $res = $builder->build($field, $value);
 
         $this->assertSame($fieldId, $res->id);
-        $this->assertSame($value->format('Y-m-d\TH:i:s\Z'), $res->value);
+        $this->assertSame($value->format('H:i'), $res->value);
     }
 
     /**
@@ -80,11 +80,11 @@ final class PyrusFormFieldValueBuilderDateTimeTest extends BaseCasePyrusForm
         $field = $this->createPyrusFieldMock(
             [
                 'id' => $fieldId,
-                'type' => FormFieldType::DUE_DATE_TIME,
+                'type' => FormFieldType::TIME,
             ]
         );
 
-        $builder = new PyrusFormFieldValueBuilderDateTime();
+        $builder = new PyrusFormFieldValueBuilderTime();
         $res = $builder->build($field, $value);
 
         $this->assertSame($fieldId, $res->id);
