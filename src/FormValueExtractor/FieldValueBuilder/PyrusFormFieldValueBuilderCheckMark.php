@@ -9,7 +9,7 @@ use SuareSu\PyrusClient\Entity\Form\FormFieldType;
 use SuareSu\PyrusClient\Entity\Task\FormTaskCreateField;
 
 /**
- * Convert checkmarks value.
+ * Convert checkmark value.
  *
  * @psalm-api
  */

@@ -94,6 +94,11 @@ services:
     tags: 
       - { name: 'pyrus_client_symfony.field_extractor', priority: -2000 }
 
+  SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderDateTime:
+    class: SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderDateTime
+    tags: 
+      - { name: 'pyrus_client_symfony.field_extractor', priority: -2000 }
+
   SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderFile:
     class: SuareSu\PyrusClientSymfony\FormValueExtractor\FieldValueBuilder\PyrusFormFieldValueBuilderFile
     arguments:
