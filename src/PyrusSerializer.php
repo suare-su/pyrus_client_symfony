@@ -229,12 +229,12 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             'last_modified_date' => $object->lastModifiedDate->format('Y-m-d\TH:i:s\Z'),
             'author' => $object->author,
             'close_date' => $object->closeDate->format('Y-m-d\TH:i:s\Z'),
-            'approvals' => array_map(fn (Approval $val): array => $this->normalizeApproval($val), $object->approvals),
-            'subscribers' => array_map(fn (Approval $val): array => $this->normalizeApproval($val), $object->subscribers),
+            'approvals' => array_values(array_map(fn (Approval $val): array => $this->normalizeApproval($val), $object->approvals)),
+            'subscribers' => array_values(array_map(fn (Approval $val): array => $this->normalizeApproval($val), $object->subscribers)),
             'linked_task_ids' => $object->linkedTaskIds,
-            'attachments' => array_map(fn (Attachment $val): array => $this->normalizeAttachment($val), $object->attachments),
-            'fields' => array_map(fn (FormTaskField $val): array => $this->normalizeFormTaskField($val), $object->fields),
-            'comments' => array_map(fn (Comment $val): array => $this->normalizeComment($val), $object->comments),
+            'attachments' => array_values(array_map(fn (Attachment $val): array => $this->normalizeAttachment($val), $object->attachments)),
+            'fields' => array_values(array_map(fn (FormTaskField $val): array => $this->normalizeFormTaskField($val), $object->fields)),
+            'comments' => array_values(array_map(fn (Comment $val): array => $this->normalizeComment($val), $object->comments)),
         ];
 
         if (null !== $object->responsible) {
@@ -280,7 +280,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
     {
         $result = [
             'form_id' => $object->formId,
-            'fields' => array_map(fn (FormTaskCreateField $val): array => $this->normalizeFormTaskCreateField($val), $object->fields),
+            'fields' => array_values(array_map(fn (FormTaskCreateField $val): array => $this->normalizeFormTaskCreateField($val), $object->fields)),
             'attachments' => $object->attachments,
             'subscribers' => $object->subscribers,
             'list_ids' => $object->listIds,
@@ -354,8 +354,8 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             'name' => $object->name,
             'deleted_or_closed' => $object->deletedOrClosed,
             'steps' => $object->steps,
-            'fields' => array_map(fn (FormField $val): array => $this->normalizeFormField($val), $object->fields),
-            'print_forms' => array_map(fn (PrintForm $val): array => $this->normalizePrintForm($val), $object->printForms),
+            'fields' => array_values(array_map(fn (FormField $val): array => $this->normalizeFormField($val), $object->fields)),
+            'print_forms' => array_values(array_map(fn (PrintForm $val): array => $this->normalizePrintForm($val), $object->printForms)),
         ];
     }
 
@@ -386,7 +386,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
         return [
             'apply' => $object->apply,
             'catalog_headers' => $object->catalogHeaders,
-            'items' => array_map(fn (CatalogItemCreate $val): array => $this->normalizeCatalogItemCreate($val), $object->items),
+            'items' => array_values(array_map(fn (CatalogItemCreate $val): array => $this->normalizeCatalogItemCreate($val), $object->items)),
         ];
     }
 
@@ -403,7 +403,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
         return [
             'name' => $object->name,
             'catalog_headers' => $object->catalogHeaders,
-            'items' => array_map(fn (CatalogItemCreate $val): array => $this->normalizeCatalogItemCreate($val), $object->items),
+            'items' => array_values(array_map(fn (CatalogItemCreate $val): array => $this->normalizeCatalogItemCreate($val), $object->items)),
         ];
     }
 
@@ -416,8 +416,8 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             'version' => $object->version,
             'deleted' => $object->deleted,
             'supervisors' => $object->supervisors,
-            'catalog_headers' => array_map(fn (CatalogHeader $val): array => $this->normalizeCatalogHeader($val), $object->catalogHeaders),
-            'items' => array_map(fn (CatalogItem $val): array => $this->normalizeCatalogItem($val), $object->items),
+            'catalog_headers' => array_values(array_map(fn (CatalogHeader $val): array => $this->normalizeCatalogHeader($val), $object->catalogHeaders)),
+            'items' => array_values(array_map(fn (CatalogItem $val): array => $this->normalizeCatalogItem($val), $object->items)),
         ];
     }
 
@@ -440,9 +440,9 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
     {
         return [
             'apply' => $object->apply,
-            'added' => array_map(fn (CatalogItemCreate $val): array => $this->normalizeCatalogItemCreate($val), $object->added),
-            'deleted' => array_map(fn (CatalogItemCreate $val): array => $this->normalizeCatalogItemCreate($val), $object->deleted),
-            'catalog_headers' => array_map(fn (CatalogHeader $val): array => $this->normalizeCatalogHeader($val), $object->catalogHeaders),
+            'added' => array_values(array_map(fn (CatalogItemCreate $val): array => $this->normalizeCatalogItemCreate($val), $object->added)),
+            'deleted' => array_values(array_map(fn (CatalogItemCreate $val): array => $this->normalizeCatalogItemCreate($val), $object->deleted)),
+            'catalog_headers' => array_values(array_map(fn (CatalogHeader $val): array => $this->normalizeCatalogHeader($val), $object->catalogHeaders)),
         ];
     }
 
