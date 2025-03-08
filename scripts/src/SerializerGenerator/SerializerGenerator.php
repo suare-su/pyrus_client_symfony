@@ -187,10 +187,10 @@ final class SerializerGenerator
                 $valueType = $type->getCollectionValueTypes()[0] ?? null;
                 $valueDescription = $descriptions[(string) $valueType?->getClassName()] ?? null;
                 if ($valueDescription) {
-                    $propertyValue = 'array_map(';
+                    $propertyValue = 'array_values(array_map(';
                     $propertyValue .= "fn ({$valueDescription->shortClassName} \$val): array => \$this->normalize{$valueDescription->shortClassName}(\$val),";
                     $propertyValue .= " \$object->{$property}";
-                    $propertyValue .= ')';
+                    $propertyValue .= '))';
                 } else {
                     $propertyValue = "\$object->{$property}";
                 }
