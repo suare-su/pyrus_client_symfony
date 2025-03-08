@@ -57,6 +57,8 @@ final class PyrusFieldConverterFileTest extends BaseCasePyrusForm
         );
 
         $form = $this->createPyrusFormMock($field);
+        $options = PyrusFieldConverterHelper::getDefaultOptions($field);
+        $options['multiple'] = true;
 
         $builder = $this->createSymfonyFormBuilderMock();
         $builder->expects($this->once())
@@ -64,7 +66,38 @@ final class PyrusFieldConverterFileTest extends BaseCasePyrusForm
             ->with(
                 $this->identicalTo(PyrusFieldConverterHelper::getHtmlName($field)),
                 $this->identicalTo(FileType::class),
-                $this->identicalTo(PyrusFieldConverterHelper::getDefaultOptions($field)),
+                $this->identicalTo($options),
+            );
+
+        $converter = new PyrusFieldConverterFile();
+        $converter->convert($form, $field, $builder);
+    }
+
+    /**
+     * @test
+     */
+    public function testConvertSignature(): void
+    {
+        $field = $this->createPyrusFieldMock(
+            [
+                'type' => FormFieldType::FILE,
+                'info' => [
+                    'code' => 'Signature',
+                ],
+            ]
+        );
+
+        $form = $this->createPyrusFormMock($field);
+        $options = PyrusFieldConverterHelper::getDefaultOptions($field);
+        $options['multiple'] = false;
+
+        $builder = $this->createSymfonyFormBuilderMock();
+        $builder->expects($this->once())
+            ->method('add')
+            ->with(
+                $this->identicalTo(PyrusFieldConverterHelper::getHtmlName($field)),
+                $this->identicalTo(FileType::class),
+                $this->identicalTo($options),
             );
 
         $converter = new PyrusFieldConverterFile();

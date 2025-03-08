@@ -30,10 +30,13 @@ final class PyrusFieldConverterFile implements PyrusFieldConverter
      */
     public function convert(Form $pyrusForm, FormField $field, FormBuilderInterface $builder): void
     {
+        $options = PyrusFieldConverterHelper::getDefaultOptions($field);
+        $options['multiple'] = !isset($field->info['code']) || 'Signature' !== $field->info['code'];
+
         $builder->add(
             PyrusFieldConverterHelper::getHtmlName($field),
             FileType::class,
-            PyrusFieldConverterHelper::getDefaultOptions($field)
+            $options
         );
     }
 }
