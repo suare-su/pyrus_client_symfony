@@ -33,13 +33,72 @@ final class PyrusFormFieldValueBuilderFile implements PyrusFormFieldValueBuilder
      */
     public function build(FormField $field, mixed $value): FormTaskCreateField
     {
-        if ($value instanceof UploadedFile) {
-            return new FormTaskCreateField(
-                $field->id,
-                $value->move($this->targetFolder)->getRealPath()
-            );
+        if (null === $value) {
+            return new FormTaskCreateField($field->id, null);
         }
 
-        return new FormTaskCreateField($field->id, null);
+        $convertedValues = [];
+        foreach ($this->getUploadedFileArray($value) as $file) {
+            $savedFile = $file->move(
+                $this->targetFolder,
+                $this->createSafeNameForFile($file)
+            );
+            $convertedValues[] = $savedFile->getRealPath();
+        }
+
+        return new FormTaskCreateField($field->id, $convertedValues);
+    }
+
+    /**
+     * Converts the given value into an array of uploaded files.
+     *
+     * @return UploadedFile[]
+     */
+    private function getUploadedFileArray(mixed $value): array
+    {
+        if ($value instanceof UploadedFile) {
+            $value = [$value];
+        }
+
+        if (!\is_array($value)) {
+            throw new \InvalidArgumentException('Value must be in array');
+        }
+
+        $result = [];
+        foreach ($value as $item) {
+            if (!($item instanceof UploadedFile)) {
+                throw new \InvalidArgumentException('All items must implement ' . UploadedFile::class);
+            }
+            $result[] = $item;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Generates a safe filename for the given uploaded file.
+     */
+    private function createSafeNameForFile(UploadedFile $file): string
+    {
+        $name = $this->makeStringSafe(
+            $file->getClientOriginalName()
+        );
+
+        $extension = $this->makeStringSafe(
+            $file->getClientOriginalExtension()
+        );
+
+        return "{$name}.{$extension}";
+    }
+
+    /**
+     * Sanitizes a string to make it safe for use.
+     */
+    private function makeStringSafe(string $string): string
+    {
+        $string = preg_replace('/[^\p{L}\p{N}_]+/u', '_', $string);
+        $string = mb_strtolower($string);
+
+        return trim($string, '_');
     }
 }
