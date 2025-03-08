@@ -200,7 +200,7 @@ final class PyrusFormFieldValueBuilderFileTest extends BaseCasePyrusForm
         $builder = new PyrusFormFieldValueBuilderFile('/test/');
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage(UploadedFile::class);
+        $this->expectExceptionMessage('All items must implement ' . UploadedFile::class);
         $builder->build($field, ['test']);
     }
 }
