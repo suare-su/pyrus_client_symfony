@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SuareSu\PyrusClientSymfony\Tests;
 
 use SuareSu\PyrusClient\Client\PyrusClientOptions;
+use SuareSu\PyrusClient\Exception\PyrusClientException;
 use SuareSu\PyrusClient\Transport\PyrusRequest;
 use SuareSu\PyrusClient\Transport\PyrusRequestMethod;
 use SuareSu\PyrusClientSymfony\PyrusSymfonyHttpTransport;
@@ -17,6 +18,8 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 final class PyrusSymfonyHttpTransportTest extends BaseCase
 {
     /**
+     * @test
+     *
      * @dataProvider provideRequest
      */
     public function testRequest(PyrusRequest $request, ?PyrusClientOptions $requestOptions, array $symfonyOptions, int $statusCode, string $content): void
@@ -115,6 +118,8 @@ final class PyrusSymfonyHttpTransportTest extends BaseCase
     }
 
     /**
+     * @test
+     *
      * @dataProvider provideUploadFile
      */
     public function testUploadFile(PyrusRequest $request, ?PyrusClientOptions $requestOptions, array $symfonyOptions, int $statusCode, string $content): void
@@ -123,13 +128,10 @@ final class PyrusSymfonyHttpTransportTest extends BaseCase
         $symfonyResponse->expects($this->atLeastOnce())->method('getStatusCode')->willReturn($statusCode);
         $symfonyResponse->expects($this->atLeastOnce())->method('getContent')->willReturn($content);
 
-        $fileObject = new \SplFileObject('php://memory');
+        $path = __FILE__;
         $fileInfo = $this->mock(\SplFileInfo::class);
-        $fileInfo->expects($this->any())->method('openFile')->willReturn($fileObject);
-
-        $symfonyOptions['body'] = [
-            'file' => $fileObject,
-        ];
+        $fileInfo->expects($this->any())->method('isFile')->willReturn(true);
+        $fileInfo->expects($this->any())->method('getRealPath')->willReturn($path);
 
         $symfonyTransport = $this->mock(HttpClientInterface::class);
         $symfonyTransport->expects($this->once())
@@ -137,7 +139,18 @@ final class PyrusSymfonyHttpTransportTest extends BaseCase
             ->with(
                 $this->identicalTo($request->method->value),
                 $this->identicalTo($request->url),
-                $this->identicalTo($symfonyOptions)
+                $this->callback(
+                    function (array $data) use ($symfonyOptions, $path): bool {
+                        $file = $data['body']['file'] ?? null;
+                        if (!\is_resource($file)) {
+                            return false;
+                        }
+                        unset($data['body']);
+                        $metadata = stream_get_meta_data($file);
+
+                        return $data === $symfonyOptions && $metadata['uri'] === $path;
+                    }
+                )
             )
             ->willReturn($symfonyResponse);
 
@@ -173,5 +186,24 @@ final class PyrusSymfonyHttpTransportTest extends BaseCase
                 'test content',
             ],
         ];
+    }
+
+    /**
+     * @test
+     */
+    public function testUploadFileCantOpenException(): void
+    {
+        $path = 'no_such_file';
+        $fileInfo = $this->mock(\SplFileInfo::class);
+        $fileInfo->expects($this->any())->method('isFile')->willReturn(false);
+        $fileInfo->expects($this->any())->method('getRealPath')->willReturn($path);
+
+        $symfonyTransport = $this->mock(HttpClientInterface::class);
+
+        $transport = new PyrusSymfonyHttpTransport($symfonyTransport);
+
+        $this->expectException(PyrusClientException::class);
+        $this->expectExceptionMessage($path);
+        $transport->uploadFile(new PyrusRequest(PyrusRequestMethod::GET, 'test'), $fileInfo);
     }
 }
