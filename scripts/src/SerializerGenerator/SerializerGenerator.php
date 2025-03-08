@@ -179,14 +179,11 @@ final class SerializerGenerator
         $items = [];
         $conditionals = '';
         foreach ($description->properties as $property => $definition) {
-            if (!isset($definition[0])) {
-                continue;
-            }
-            $type = $definition[0];
+            $type = $definition[0] ?? null;
             /** @psalm-var class-string|null */
-            $className = $type->getClassName();
+            $className = $type?->getClassName();
             $propertyKey = CaseHelper::camelToSnake($property);
-            if ($type->isCollection()) {
+            if (true === $type?->isCollection()) {
                 $valueType = $type->getCollectionValueTypes()[0] ?? null;
                 $valueDescription = $descriptions[(string) $valueType?->getClassName()] ?? null;
                 if ($valueDescription) {
@@ -204,7 +201,7 @@ final class SerializerGenerator
             } else {
                 $propertyValue = "\$object->{$property}";
             }
-            if ($type->isNullable()) {
+            if (true === $type?->isNullable()) {
                 $conditionals .= PhpLineHelper::if(
                     "\$object->{$property} !== null",
                     "\$result['{$propertyKey}'] = {$propertyValue}"

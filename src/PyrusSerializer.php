@@ -12,6 +12,7 @@ use SuareSu\PyrusClient\Entity\Catalog\CatalogItem;
 use SuareSu\PyrusClient\Entity\Catalog\CatalogItemCreate;
 use SuareSu\PyrusClient\Entity\Catalog\CatalogUpdate;
 use SuareSu\PyrusClient\Entity\Catalog\CatalogUpdateResponse;
+use SuareSu\PyrusClient\Entity\File\File;
 use SuareSu\PyrusClient\Entity\Form\Form;
 use SuareSu\PyrusClient\Entity\Form\FormField;
 use SuareSu\PyrusClient\Entity\Form\FormFieldType;
@@ -43,6 +44,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             || $data instanceof FormTaskField
             || $data instanceof FormTaskCreate
             || $data instanceof Approval
+            || $data instanceof File
             || $data instanceof Attachment
             || $data instanceof PrintForm
             || $data instanceof Form
@@ -74,6 +76,8 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             return $this->normalizeFormTaskCreate($data);
         } elseif ($data instanceof Approval) {
             return $this->normalizeApproval($data);
+        } elseif ($data instanceof File) {
+            return $this->normalizeFile($data);
         } elseif ($data instanceof Attachment) {
             return $this->normalizeAttachment($data);
         } elseif ($data instanceof PrintForm) {
@@ -118,6 +122,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             || FormTaskField::class === $type
             || FormTaskCreate::class === $type
             || Approval::class === $type
+            || File::class === $type
             || Attachment::class === $type
             || PrintForm::class === $type
             || Form::class === $type
@@ -153,6 +158,8 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             return $this->denormalizeFormTaskCreate($data);
         } elseif (Approval::class === $type) {
             return $this->denormalizeApproval($data);
+        } elseif (File::class === $type) {
+            return $this->denormalizeFile($data);
         } elseif (Attachment::class === $type) {
             return $this->denormalizeAttachment($data);
         } elseif (PrintForm::class === $type) {
@@ -197,6 +204,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             FormTaskField::class => true,
             FormTaskCreate::class => true,
             Approval::class => true,
+            File::class => true,
             Attachment::class => true,
             PrintForm::class => true,
             Form::class => true,
@@ -243,6 +251,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
     {
         return [
             'id' => $object->id,
+            'value' => $object->value,
         ];
     }
 
@@ -263,6 +272,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             'type' => $object->type,
             'name' => $object->name,
             'code' => $object->code,
+            'value' => $object->value,
         ];
     }
 
@@ -305,6 +315,14 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
         return [
             'person' => $object->person,
             'approval_choice' => $object->approvalChoice,
+        ];
+    }
+
+    private function normalizeFile(File $object): array
+    {
+        return [
+            'guid' => $object->guid,
+            'md5_hash' => $object->md5Hash,
         ];
     }
 
@@ -519,6 +537,17 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
         return new Approval(
             $this->denormalizePerson((array) ($data['person'] ?? [])),
             (string) ($data['approval_choice'] ?? ''),
+        );
+    }
+
+    /**
+     * @psalm-suppress MixedArgumentTypeCoercion
+     */
+    private function denormalizeFile(array $data): File
+    {
+        return new File(
+            (string) ($data['guid'] ?? ''),
+            (string) ($data['md5_hash'] ?? ''),
         );
     }
 
