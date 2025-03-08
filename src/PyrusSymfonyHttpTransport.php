@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SuareSu\PyrusClientSymfony;
 
 use SuareSu\PyrusClient\Client\PyrusClientOptions;
+use SuareSu\PyrusClient\Exception\PyrusClientException;
 use SuareSu\PyrusClient\Transport\PyrusRequest;
 use SuareSu\PyrusClient\Transport\PyrusRequestMethod;
 use SuareSu\PyrusClient\Transport\PyrusResponse;
@@ -48,13 +49,21 @@ final class PyrusSymfonyHttpTransport implements PyrusTransport
      */
     public function uploadFile(PyrusRequest $request, \SplFileInfo $file, ?PyrusClientOptions $options = null): PyrusResponse
     {
-        $symfonyOptions = $this->prepareBaseSymfonyOptions($request, $options);
+        if (!$file->isFile()) {
+            throw new PyrusClientException("Can't open '{$file->getRealPath()}' file");
+        }
 
+        $symfonyOptions = $this->prepareBaseSymfonyOptions($request, $options);
+        $fh = fopen($file->getRealPath(), 'r');
         $symfonyOptions['body'] = [
-            'file' => $file->openFile(),
+            'file' => $fh,
         ];
 
-        return $this->runSymfonyRequest($request, $symfonyOptions);
+        $response = $this->runSymfonyRequest($request, $symfonyOptions);
+
+        fclose($fh);
+
+        return $response;
     }
 
     /**
