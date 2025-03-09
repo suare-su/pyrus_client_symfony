@@ -38,12 +38,14 @@ final class PyrusFormFieldValueBuilderFile implements PyrusFormFieldValueBuilder
         }
 
         $convertedValues = [];
+        $number = 0;
         foreach ($this->getUploadedFileArray($value) as $file) {
             $savedFile = $file->move(
                 $this->targetFolder,
-                $this->createSafeNameForFile($file)
+                $this->createSafeNameForFile($field, $file, $number)
             );
             $convertedValues[] = $savedFile->getRealPath();
+            ++$number;
         }
 
         return new FormTaskCreateField($field->id, $convertedValues);
@@ -78,7 +80,7 @@ final class PyrusFormFieldValueBuilderFile implements PyrusFormFieldValueBuilder
     /**
      * Generates a safe filename for the given uploaded file.
      */
-    private function createSafeNameForFile(UploadedFile $file): string
+    private function createSafeNameForFile(FormField $field, UploadedFile $file, int $number): string
     {
         $name = $this->makeStringSafe(
             pathinfo($file->getClientOriginalName(), \PATHINFO_FILENAME)
@@ -88,7 +90,19 @@ final class PyrusFormFieldValueBuilderFile implements PyrusFormFieldValueBuilder
             $file->getClientOriginalExtension()
         );
 
-        return "{$name}.{$extension}";
+        if ('' === $name) {
+            $result = 'incorrect_name_was_provided';
+        } else {
+            $result = $name;
+        }
+
+        $result .= "_{$field->id}_{$number}_" . $this->createRandomFileNamePart($file);
+
+        if ('' !== $extension) {
+            $result .= ".{$extension}";
+        }
+
+        return $result;
     }
 
     /**
@@ -100,5 +114,19 @@ final class PyrusFormFieldValueBuilderFile implements PyrusFormFieldValueBuilder
         $string = mb_strtolower($string);
 
         return trim($string, '_');
+    }
+
+    /**
+     * Generates a random string to use as part of a filename.
+     */
+    private function createRandomFileNamePart(UploadedFile $file): string
+    {
+        return md5(
+            $file->getClientOriginalName()
+            . '_'
+            . time()
+            . '_'
+            . mt_rand()
+        );
     }
 }
