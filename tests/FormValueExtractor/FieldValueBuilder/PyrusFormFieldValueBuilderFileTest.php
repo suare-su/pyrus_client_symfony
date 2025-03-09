@@ -52,7 +52,7 @@ final class PyrusFormFieldValueBuilderFileTest extends BaseCasePyrusForm
 
     /**
      * @test
-     * 
+     *
      * @dataProvider provideBuild
      */
     public function testBuild(int $fieldId, string $clientOriginalName, string $clientOriginalExtension, string $safeName): void
@@ -93,47 +93,47 @@ final class PyrusFormFieldValueBuilderFileTest extends BaseCasePyrusForm
     public static function provideBuild(): array
     {
         return [
-            "dots in name" => [
+            'dots in name' => [
                 123,
-                "..te........st.php",
-                "..php..",
-                "te_st_123_0.php"
+                '..te........st.php',
+                '..php..',
+                'te_st_123_0.php',
             ],
-            "digits in name" => [
+            'digits in name' => [
                 123,
-                "123test.php",
-                "php",
-                "123test_123_0.php"
+                '123test.php',
+                'php',
+                '123test_123_0.php',
             ],
-            "random symbols in name" => [
+            'random symbols in name' => [
                 123,
-                "#^$%^$^%test)(*<><>.php",
-                "php",
-                "test_123_0.php"
+                '#^$%^$^%test)(*<><>.php',
+                'php',
+                'test_123_0.php',
             ],
-            "only random symbols in name" => [
+            'only random symbols in name' => [
                 123,
-                "#^$%^$^%)(*<><>.php",
-                "php",
-                "incorrect_name_was_provided_123_0.php"
+                '#^$%^$^%)(*<><>.php',
+                'php',
+                'incorrect_name_was_provided_123_0.php',
             ],
-            "uppercase in name" => [
+            'uppercase in name' => [
                 123,
-                "TeSt.php",
-                "php",
-                "test_123_0.php"
+                'TeSt.php',
+                'php',
+                'test_123_0.php',
             ],
-            "utf in name" => [
+            'utf in name' => [
                 123,
-                "ТеСТ.php",
-                "php",
-                "тест_123_0.php"
+                'ТеСТ.php',
+                'php',
+                'тест_123_0.php',
             ],
-            "no extension" => [
+            'no extension' => [
                 123,
-                "makefile",
-                "",
-                "makefile_123_0"
+                'makefile',
+                '',
+                'makefile_123_0',
             ],
         ];
     }
