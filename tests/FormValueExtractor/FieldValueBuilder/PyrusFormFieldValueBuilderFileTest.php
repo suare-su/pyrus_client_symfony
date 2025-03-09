@@ -69,7 +69,7 @@ final class PyrusFormFieldValueBuilderFileTest extends BaseCasePyrusForm
         $savedFile = $this->mock(File::class);
         $savedFile->expects($this->any())->method('getRealPath')->willReturn($realPath);
 
-        $clientOriginalName = ' %тЕст,';
+        $clientOriginalName = ' %тЕст,.PhP)))((';
         $clientOriginalExtension = 'PhP)))((';
         $safeName = 'тест.php';
         $uploadedFile = $this->mock(UploadedFile::class);
@@ -87,7 +87,7 @@ final class PyrusFormFieldValueBuilderFileTest extends BaseCasePyrusForm
         $savedFile1 = $this->mock(File::class);
         $savedFile1->expects($this->any())->method('getRealPath')->willReturn($realPath1);
 
-        $clientOriginalName1 = 'TeSt';
+        $clientOriginalName1 = 'TeSt.PhP)))((';
         $clientOriginalExtension1 = 'PhP)))((';
         $safeName1 = 'test.php';
         $uploadedFile1 = $this->mock(UploadedFile::class);
@@ -127,7 +127,7 @@ final class PyrusFormFieldValueBuilderFileTest extends BaseCasePyrusForm
         $savedFile = $this->mock(File::class);
         $savedFile->expects($this->any())->method('getRealPath')->willReturn($realPath);
 
-        $clientOriginalName = 'test';
+        $clientOriginalName = 'test.php';
         $clientOriginalExtension = 'php';
         $safeName = 'test.php';
         $uploadedFile = $this->mock(UploadedFile::class);
