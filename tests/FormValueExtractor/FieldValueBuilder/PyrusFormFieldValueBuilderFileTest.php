@@ -52,11 +52,12 @@ final class PyrusFormFieldValueBuilderFileTest extends BaseCasePyrusForm
 
     /**
      * @test
+     *
+     * @dataProvider provideBuild
      */
-    public function testBuild(): void
+    public function testBuild(int $fieldId, string $clientOriginalName, string $clientOriginalExtension, string $safeName): void
     {
         $path = '/test/';
-        $fieldId = 321;
 
         $field = $this->createPyrusFieldMock(
             [
@@ -69,9 +70,6 @@ final class PyrusFormFieldValueBuilderFileTest extends BaseCasePyrusForm
         $savedFile = $this->mock(File::class);
         $savedFile->expects($this->any())->method('getRealPath')->willReturn($realPath);
 
-        $clientOriginalName = ' %тЕст,.PhP)))((';
-        $clientOriginalExtension = 'PhP)))((';
-        $safeName = 'тест.php';
         $uploadedFile = $this->mock(UploadedFile::class);
         $uploadedFile->expects($this->any())->method('getClientOriginalName')->willReturn($clientOriginalName);
         $uploadedFile->expects($this->any())->method('getClientOriginalExtension')->willReturn($clientOriginalExtension);
@@ -79,39 +77,71 @@ final class PyrusFormFieldValueBuilderFileTest extends BaseCasePyrusForm
             ->method('move')
             ->with(
                 $this->identicalTo($path),
-                $this->identicalTo($safeName),
+                $this->callback(
+                    fn (string $n): bool => trim(preg_replace("/_([^\._]+)(\.|$)/", '.', $n), '.') === $safeName
+                ),
             )
             ->willReturn($savedFile);
 
-        $realPath1 = '/realpath1.txt';
-        $savedFile1 = $this->mock(File::class);
-        $savedFile1->expects($this->any())->method('getRealPath')->willReturn($realPath1);
-
-        $clientOriginalName1 = 'TeSt.PhP)))((';
-        $clientOriginalExtension1 = 'PhP)))((';
-        $safeName1 = 'test.php';
-        $uploadedFile1 = $this->mock(UploadedFile::class);
-        $uploadedFile1->expects($this->any())->method('getClientOriginalName')->willReturn($clientOriginalName1);
-        $uploadedFile1->expects($this->any())->method('getClientOriginalExtension')->willReturn($clientOriginalExtension1);
-        $uploadedFile1->expects($this->once())
-            ->method('move')
-            ->with(
-                $this->identicalTo($path),
-                $this->identicalTo($safeName1),
-            )
-            ->willReturn($savedFile1);
-
         $builder = new PyrusFormFieldValueBuilderFile($path);
-        $res = $builder->build($field, [$uploadedFile, $uploadedFile1]);
+        $res = $builder->build($field, $uploadedFile);
 
         $this->assertSame($fieldId, $res->id);
-        $this->assertSame([$realPath, $realPath1], $res->value);
+        $this->assertSame([$realPath], $res->value);
+    }
+
+    public static function provideBuild(): array
+    {
+        return [
+            'dots in name' => [
+                123,
+                '..te........st.php',
+                '..php..',
+                'te_st_123_0.php',
+            ],
+            'digits in name' => [
+                123,
+                '123test.php',
+                'php',
+                '123test_123_0.php',
+            ],
+            'random symbols in name' => [
+                123,
+                '#^$%^$^%test)(*<><>.php',
+                'php',
+                'test_123_0.php',
+            ],
+            'only random symbols in name' => [
+                123,
+                '#^$%^$^%)(*<><>.php',
+                'php',
+                'incorrect_name_was_provided_123_0.php',
+            ],
+            'uppercase in name' => [
+                123,
+                'TeSt.php',
+                'php',
+                'test_123_0.php',
+            ],
+            'utf in name' => [
+                123,
+                'ТеСТ.php',
+                'php',
+                'тест_123_0.php',
+            ],
+            'no extension' => [
+                123,
+                'makefile',
+                '',
+                'makefile_123_0',
+            ],
+        ];
     }
 
     /**
      * @test
      */
-    public function testBuildSingleFile(): void
+    public function testBuildArray(): void
     {
         $path = '/test/';
         $fieldId = 321;
@@ -129,7 +159,7 @@ final class PyrusFormFieldValueBuilderFileTest extends BaseCasePyrusForm
 
         $clientOriginalName = 'test.php';
         $clientOriginalExtension = 'php';
-        $safeName = 'test.php';
+        $safeName = "test_{$fieldId}_0.php";
         $uploadedFile = $this->mock(UploadedFile::class);
         $uploadedFile->expects($this->any())->method('getClientOriginalName')->willReturn($clientOriginalName);
         $uploadedFile->expects($this->any())->method('getClientOriginalExtension')->willReturn($clientOriginalExtension);
@@ -137,15 +167,37 @@ final class PyrusFormFieldValueBuilderFileTest extends BaseCasePyrusForm
             ->method('move')
             ->with(
                 $this->identicalTo($path),
-                $this->identicalTo($safeName),
+                $this->callback(
+                    fn (string $n): bool => trim(preg_replace("/_([^\._]+)(\.|$)/", '.', $n), '.') === $safeName
+                )
             )
             ->willReturn($savedFile);
 
+        $realPath1 = '/realpath1.txt';
+        $savedFile1 = $this->mock(File::class);
+        $savedFile1->expects($this->any())->method('getRealPath')->willReturn($realPath1);
+
+        $clientOriginalName1 = 'test1.php';
+        $clientOriginalExtension1 = 'php';
+        $safeName1 = "test1_{$fieldId}_1.php";
+        $uploadedFile1 = $this->mock(UploadedFile::class);
+        $uploadedFile1->expects($this->any())->method('getClientOriginalName')->willReturn($clientOriginalName1);
+        $uploadedFile1->expects($this->any())->method('getClientOriginalExtension')->willReturn($clientOriginalExtension1);
+        $uploadedFile1->expects($this->once())
+            ->method('move')
+            ->with(
+                $this->identicalTo($path),
+                $this->callback(
+                    fn (string $n): bool => trim(preg_replace("/_([^\._]+)(\.|$)/", '.', $n), '.') === $safeName1
+                )
+            )
+            ->willReturn($savedFile1);
+
         $builder = new PyrusFormFieldValueBuilderFile($path);
-        $res = $builder->build($field, $uploadedFile);
+        $res = $builder->build($field, [$uploadedFile, $uploadedFile1]);
 
         $this->assertSame($fieldId, $res->id);
-        $this->assertSame([$realPath], $res->value);
+        $this->assertSame([$realPath, $realPath1], $res->value);
     }
 
     /**

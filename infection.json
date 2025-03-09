@@ -18,6 +18,8 @@
         "CastString": false,
         "CastInt": false,
         "CastArray": false,
-        "Coalesce": false
+        "Coalesce": false,
+        "ConcatOperandRemoval": false,
+        "Concat": false
     }
 }
