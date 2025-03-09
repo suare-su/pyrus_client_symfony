@@ -81,7 +81,7 @@ final class PyrusFormFieldValueBuilderFile implements PyrusFormFieldValueBuilder
     private function createSafeNameForFile(UploadedFile $file): string
     {
         $name = $this->makeStringSafe(
-            $file->getClientOriginalName()
+            pathinfo($file->getClientOriginalName(), \PATHINFO_FILENAME)
         );
 
         $extension = $this->makeStringSafe(
