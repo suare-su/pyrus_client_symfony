@@ -23,6 +23,7 @@ final class PyrusFieldConverterPhone implements PyrusFieldConverter
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function supportsConversion(Form $pyrusForm, FormField $field): bool
     {
         return FormFieldType::PHONE === $field->type;
@@ -31,6 +32,7 @@ final class PyrusFieldConverterPhone implements PyrusFieldConverter
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function convert(Form $pyrusForm, FormField $field, FormBuilderInterface $builder): void
     {
         $htmlName = PyrusFieldConverterHelper::getHtmlName($field);

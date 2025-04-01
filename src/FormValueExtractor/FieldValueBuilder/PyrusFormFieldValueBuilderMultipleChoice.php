@@ -18,6 +18,7 @@ final class PyrusFormFieldValueBuilderMultipleChoice implements PyrusFormFieldVa
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function supports(FormField $field, mixed $value): bool
     {
         return FormFieldType::MULTIPLE_CHOICE === $field->type;
@@ -26,6 +27,7 @@ final class PyrusFormFieldValueBuilderMultipleChoice implements PyrusFormFieldVa
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function build(FormField $field, mixed $value): FormTaskCreateField
     {
         if (null === $value) {

@@ -23,6 +23,7 @@ final class PyrusFormFieldValueBuilderFile implements PyrusFormFieldValueBuilder
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function supports(FormField $field, mixed $value): bool
     {
         return FormFieldType::FILE === $field->type;
@@ -31,6 +32,7 @@ final class PyrusFormFieldValueBuilderFile implements PyrusFormFieldValueBuilder
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function build(FormField $field, mixed $value): FormTaskCreateField
     {
         if (null === $value) {
@@ -110,7 +112,7 @@ final class PyrusFormFieldValueBuilderFile implements PyrusFormFieldValueBuilder
      */
     private function makeStringSafe(string $string): string
     {
-        $string = preg_replace('/[^\p{L}\p{N}_]+/u', '_', $string);
+        $string = (string) preg_replace('/[^\p{L}\p{N}_]+/u', '_', $string);
         $string = mb_strtolower($string);
 
         return trim($string, '_');

@@ -21,6 +21,7 @@ final class SuareSuPyrusClientSymfonyCheckFormComponentPass implements CompilerP
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function process(ContainerBuilder $container): void
     {
         if (!$container->has('form.factory') || !$container->has('validator')) {

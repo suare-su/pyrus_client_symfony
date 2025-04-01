@@ -21,6 +21,7 @@ final class PyrusFieldConverterEmail implements PyrusFieldConverter
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function supportsConversion(Form $pyrusForm, FormField $field): bool
     {
         return FormFieldType::EMAIL === $field->type;
@@ -29,6 +30,7 @@ final class PyrusFieldConverterEmail implements PyrusFieldConverter
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function convert(Form $pyrusForm, FormField $field, FormBuilderInterface $builder): void
     {
         $htmlName = PyrusFieldConverterHelper::getHtmlName($field);

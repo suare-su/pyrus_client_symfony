@@ -9,7 +9,7 @@ use SuareSu\PyrusClientSymfony\SuareSuPyrusClientSymfonyBundle;
 /**
  * @internal
  */
-class SuareSuPyrusClientSymfonyBundleTest extends BaseCase
+final class SuareSuPyrusClientSymfonyBundleTest extends BaseCase
 {
     public function testGetPath(): void
     {

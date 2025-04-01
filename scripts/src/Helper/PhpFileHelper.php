@@ -56,8 +56,13 @@ final class PhpFileHelper
      */
     public static function getFQCNsFromFile(\SplFileInfo $phpFile): array
     {
+        $fileContent = file_get_contents($phpFile->getRealPath());
+        if (!\is_string($fileContent) || '' === $fileContent) {
+            throw new \RuntimeException("Can't get content of '{$phpFile->getRealPath()}' file");
+        }
+
         $classes = [];
-        $tokens = \PhpToken::tokenize(file_get_contents($phpFile->getRealPath()));
+        $tokens = \PhpToken::tokenize($fileContent);
         $namespace = '';
 
         for ($i = 0; $i < \count($tokens); ++$i) {

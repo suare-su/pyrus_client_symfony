@@ -30,6 +30,7 @@ final class PyrusFormValueExtractorImpl implements PyrusFormValueExtractor
      *
      * @psalm-suppress MixedAssignment
      */
+    #[\Override]
     public function extract(FormInterface $symfonyForm, Form $pyrusForm): array
     {
         $symfonyFormData = (array) $symfonyForm->getData();

@@ -20,6 +20,7 @@ final class PyrusFieldConverterTime implements PyrusFieldConverter
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function supportsConversion(Form $pyrusForm, FormField $field): bool
     {
         return FormFieldType::TIME === $field->type;
@@ -28,6 +29,7 @@ final class PyrusFieldConverterTime implements PyrusFieldConverter
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function convert(Form $pyrusForm, FormField $field, FormBuilderInterface $builder): void
     {
         $options = PyrusFieldConverterHelper::getDefaultOptions($field);

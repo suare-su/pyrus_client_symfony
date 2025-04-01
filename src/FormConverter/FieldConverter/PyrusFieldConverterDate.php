@@ -20,6 +20,7 @@ final class PyrusFieldConverterDate implements PyrusFieldConverter
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function supportsConversion(Form $pyrusForm, FormField $field): bool
     {
         return FormFieldType::DATE === $field->type || FormFieldType::DUE_DATE === $field->type;
@@ -28,6 +29,7 @@ final class PyrusFieldConverterDate implements PyrusFieldConverter
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function convert(Form $pyrusForm, FormField $field, FormBuilderInterface $builder): void
     {
         $options = PyrusFieldConverterHelper::getDefaultOptions($field);

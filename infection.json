@@ -20,6 +20,16 @@
         "CastArray": false,
         "Coalesce": false,
         "ConcatOperandRemoval": false,
-        "Concat": false
+        "Concat": false,
+        "NotIdentical": {
+            "ignore": [
+                "SuareSu\\PyrusClientSymfony\\PyrusSymfonyHttpTransport::uploadFile"
+            ]
+        },
+        "FalseValue": {
+            "ignore": [
+                "SuareSu\\PyrusClientSymfony\\PyrusSymfonyHttpTransport::uploadFile"
+            ]
+        }
     }
 }

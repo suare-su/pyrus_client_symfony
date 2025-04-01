@@ -29,6 +29,7 @@ final class PyrusSymfonyHttpTransport implements PyrusTransport
      *
      * @psalm-suppress MixedArrayAssignment
      */
+    #[\Override]
     public function request(PyrusRequest $request, ?PyrusClientOptions $options = null): PyrusResponse
     {
         $symfonyOptions = $this->prepareBaseSymfonyOptions($request, $options);
@@ -47,6 +48,7 @@ final class PyrusSymfonyHttpTransport implements PyrusTransport
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function uploadFile(PyrusRequest $request, \SplFileInfo $file, ?PyrusClientOptions $options = null): PyrusResponse
     {
         if (!$file->isFile()) {
@@ -61,7 +63,9 @@ final class PyrusSymfonyHttpTransport implements PyrusTransport
 
         $response = $this->runSymfonyRequest($request, $symfonyOptions);
 
-        fclose($fh);
+        if (false !== $fh) {
+            fclose($fh);
+        }
 
         return $response;
     }
