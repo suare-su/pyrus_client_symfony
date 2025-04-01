@@ -17,6 +17,7 @@ final class PhoneType extends AbstractType
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function getParent(): string
     {
         return TextType::class;

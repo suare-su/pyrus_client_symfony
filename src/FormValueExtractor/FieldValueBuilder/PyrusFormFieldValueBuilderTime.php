@@ -18,6 +18,7 @@ final class PyrusFormFieldValueBuilderTime implements PyrusFormFieldValueBuilder
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function supports(FormField $field, mixed $value): bool
     {
         return FormFieldType::TIME === $field->type;
@@ -26,6 +27,7 @@ final class PyrusFormFieldValueBuilderTime implements PyrusFormFieldValueBuilder
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function build(FormField $field, mixed $value): FormTaskCreateField
     {
         if ($value instanceof \DateTimeInterface) {

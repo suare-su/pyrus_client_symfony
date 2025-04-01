@@ -78,7 +78,7 @@ final class PyrusFormFieldValueBuilderFileTest extends BaseCasePyrusForm
             ->with(
                 $this->identicalTo($path),
                 $this->callback(
-                    fn (string $n): bool => trim(preg_replace("/_([^\._]+)(\.|$)/", '.', $n), '.') === $safeName
+                    fn (string $n): bool => trim((string) preg_replace("/_([^\._]+)(\.|$)/", '.', $n), '.') === $safeName
                 ),
             )
             ->willReturn($savedFile);
@@ -168,7 +168,7 @@ final class PyrusFormFieldValueBuilderFileTest extends BaseCasePyrusForm
             ->with(
                 $this->identicalTo($path),
                 $this->callback(
-                    fn (string $n): bool => trim(preg_replace("/_([^\._]+)(\.|$)/", '.', $n), '.') === $safeName
+                    fn (string $n): bool => trim((string) preg_replace("/_([^\._]+)(\.|$)/", '.', $n), '.') === $safeName
                 )
             )
             ->willReturn($savedFile);
@@ -188,7 +188,7 @@ final class PyrusFormFieldValueBuilderFileTest extends BaseCasePyrusForm
             ->with(
                 $this->identicalTo($path),
                 $this->callback(
-                    fn (string $n): bool => trim(preg_replace("/_([^\._]+)(\.|$)/", '.', $n), '.') === $safeName1
+                    fn (string $n): bool => trim((string) preg_replace("/_([^\._]+)(\.|$)/", '.', $n), '.') === $safeName1
                 )
             )
             ->willReturn($savedFile1);

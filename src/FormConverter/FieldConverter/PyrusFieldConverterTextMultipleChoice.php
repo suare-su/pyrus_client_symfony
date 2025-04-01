@@ -20,6 +20,7 @@ final class PyrusFieldConverterTextMultipleChoice implements PyrusFieldConverter
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function supportsConversion(Form $pyrusForm, FormField $field): bool
     {
         return FormFieldType::MULTIPLE_CHOICE === $field->type;
@@ -28,6 +29,7 @@ final class PyrusFieldConverterTextMultipleChoice implements PyrusFieldConverter
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function convert(Form $pyrusForm, FormField $field, FormBuilderInterface $builder): void
     {
         $options = PyrusFieldConverterHelper::getDefaultOptions($field);

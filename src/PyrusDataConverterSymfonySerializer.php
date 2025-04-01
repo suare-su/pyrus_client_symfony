@@ -26,6 +26,7 @@ final class PyrusDataConverterSymfonySerializer implements PyrusDataConverter
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function normalize(array|object $data): array
     {
         try {
@@ -47,6 +48,7 @@ final class PyrusDataConverterSymfonySerializer implements PyrusDataConverter
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function denormalize(mixed $data, string $type): object|array
     {
         try {

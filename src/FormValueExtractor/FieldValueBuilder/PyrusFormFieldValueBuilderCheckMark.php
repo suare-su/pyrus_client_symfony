@@ -18,6 +18,7 @@ final class PyrusFormFieldValueBuilderCheckMark implements PyrusFormFieldValueBu
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function supports(FormField $field, mixed $value): bool
     {
         return FormFieldType::CHECKMARK === $field->type;
@@ -26,6 +27,7 @@ final class PyrusFormFieldValueBuilderCheckMark implements PyrusFormFieldValueBu
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function build(FormField $field, mixed $value): FormTaskCreateField
     {
         $boolValue = true === $value ? 'checked' : 'unchecked';

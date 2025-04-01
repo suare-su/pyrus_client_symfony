@@ -31,6 +31,7 @@ final class PyrusGatewayFactoryImpl implements PyrusGatewayFactory
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function createGateway(PyrusCredentials $credentials, ?PyrusClientOptions $options = null): PyrusGateway
     {
         $options = $options ?? $this->defaultOptions;

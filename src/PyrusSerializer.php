@@ -36,6 +36,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
         return $data instanceof FormTask
@@ -62,6 +63,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function normalize(mixed $data, ?string $format = null, array $context = []): array
     {
         if ($data instanceof FormTask) {
@@ -110,6 +112,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function supportsDenormalization(
         mixed $data,
         string $type,
@@ -140,6 +143,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
     {
         if (!\is_array($data)) {
@@ -195,6 +199,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
      * @psalm-suppress UnusedParam
      * @psalm-suppress LessSpecificImplementedReturnType
      */
+    #[\Override]
     public function getSupportedTypes(?string $format): array
     {
         return [
@@ -235,6 +240,8 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             'attachments' => array_values(array_map(fn (Attachment $val): array => $this->normalizeAttachment($val), $object->attachments)),
             'fields' => array_values(array_map(fn (FormTaskField $val): array => $this->normalizeFormTaskField($val), $object->fields)),
             'comments' => array_values(array_map(fn (Comment $val): array => $this->normalizeComment($val), $object->comments)),
+            'is_closed' => $object->isClosed,
+            'current_step' => $object->currentStep,
         ];
 
         if (null !== $object->responsible) {
@@ -466,6 +473,8 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             array_map(fn (array $val): Attachment => $this->denormalizeAttachment($val), (array) ($data['attachments'] ?? [])),
             array_map(fn (array $val): FormTaskField => $this->denormalizeFormTaskField($val), (array) ($data['fields'] ?? [])),
             array_map(fn (array $val): Comment => $this->denormalizeComment($val), (array) ($data['comments'] ?? [])),
+            (bool) ($data['is_closed'] ?? false),
+            (int) ($data['current_step'] ?? 0),
         );
     }
 

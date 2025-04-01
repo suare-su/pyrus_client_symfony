@@ -20,6 +20,7 @@ final class PyrusFieldConverterMoney implements PyrusFieldConverter
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function supportsConversion(Form $pyrusForm, FormField $field): bool
     {
         return FormFieldType::MONEY === $field->type;
@@ -28,6 +29,7 @@ final class PyrusFieldConverterMoney implements PyrusFieldConverter
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function convert(Form $pyrusForm, FormField $field, FormBuilderInterface $builder): void
     {
         $builder->add(

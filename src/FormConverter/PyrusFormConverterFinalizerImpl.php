@@ -25,6 +25,7 @@ final class PyrusFormConverterFinalizerImpl implements PyrusFormConverterFinaliz
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function finalize(Form $pyrusForm, FormBuilderInterface $builder): void
     {
         $builder->add(

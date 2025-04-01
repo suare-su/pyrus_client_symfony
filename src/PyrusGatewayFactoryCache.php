@@ -27,6 +27,7 @@ final class PyrusGatewayFactoryCache implements PyrusGatewayFactory
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function createGateway(PyrusCredentials $credentials, ?PyrusClientOptions $options = null): PyrusGateway
     {
         $key = $this->getCredentialsHash($credentials);

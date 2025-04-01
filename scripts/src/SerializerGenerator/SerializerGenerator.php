@@ -136,6 +136,7 @@ final class SerializerGenerator
         $method = $class->addMethod('supportsNormalization')
             ->setReturnType('bool')
             ->addComment('{@inheritDoc}')
+            ->addAttribute('Override')
             ->setVisibility('public')
             ->setBody($body);
 
@@ -163,6 +164,7 @@ final class SerializerGenerator
         $method = $class->addMethod('normalize')
             ->setReturnType('array')
             ->addComment('{@inheritDoc}')
+            ->addAttribute('Override')
             ->setVisibility('public')
             ->setBody($body);
 
@@ -243,6 +245,7 @@ final class SerializerGenerator
         $method = $class->addMethod('supportsDenormalization')
             ->setReturnType('bool')
             ->addComment('{@inheritDoc}')
+            ->addAttribute('Override')
             ->setVisibility('public')
             ->setBody($body);
 
@@ -280,6 +283,7 @@ final class SerializerGenerator
         $method = $class->addMethod('denormalize')
             ->setReturnType('mixed')
             ->addComment('{@inheritDoc}')
+            ->addAttribute('Override')
             ->setVisibility('public')
             ->setBody($body);
 
@@ -361,6 +365,7 @@ final class SerializerGenerator
         $method = $class->addMethod('getSupportedTypes')
             ->setReturnType('array')
             ->addComment('{@inheritDoc}')
+            ->addAttribute('Override')
             ->addComment('@psalm-suppress UnusedParam')
             ->addComment('@psalm-suppress LessSpecificImplementedReturnType')
             ->setVisibility('public')

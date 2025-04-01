@@ -19,6 +19,7 @@ final class PyrusFieldConverterIgnore implements PyrusFieldConverter
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function supportsConversion(Form $pyrusForm, FormField $field): bool
     {
         return \in_array(
@@ -38,6 +39,7 @@ final class PyrusFieldConverterIgnore implements PyrusFieldConverter
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function convert(Form $pyrusForm, FormField $field, FormBuilderInterface $builder): void
     {
     }

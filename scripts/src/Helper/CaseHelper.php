@@ -20,6 +20,11 @@ final class CaseHelper
 
     public static function camelToSnake(string $camelCase): string
     {
-        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $camelCase));
+        $converted = preg_replace('/(?<!^)[A-Z]/', '_$0', $camelCase);
+        if (!\is_string($converted)) {
+            throw new \InvalidArgumentException("Can't convert '${$camelCase}' to snake case");
+        }
+
+        return strtolower($converted);
     }
 }
