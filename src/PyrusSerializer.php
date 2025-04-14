@@ -20,6 +20,7 @@ use SuareSu\PyrusClient\Entity\Form\PrintForm;
 use SuareSu\PyrusClient\Entity\Person\Person;
 use SuareSu\PyrusClient\Entity\Task\Approval;
 use SuareSu\PyrusClient\Entity\Task\Comment;
+use SuareSu\PyrusClient\Entity\Task\CommentCreate;
 use SuareSu\PyrusClient\Entity\Task\FormTask;
 use SuareSu\PyrusClient\Entity\Task\FormTaskCreate;
 use SuareSu\PyrusClient\Entity\Task\FormTaskCreateField;
@@ -43,6 +44,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             || $data instanceof FormTaskCreateField
             || $data instanceof Comment
             || $data instanceof FormTaskField
+            || $data instanceof CommentCreate
             || $data instanceof FormTaskCreate
             || $data instanceof Approval
             || $data instanceof File
@@ -74,6 +76,8 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             return $this->normalizeComment($data);
         } elseif ($data instanceof FormTaskField) {
             return $this->normalizeFormTaskField($data);
+        } elseif ($data instanceof CommentCreate) {
+            return $this->normalizeCommentCreate($data);
         } elseif ($data instanceof FormTaskCreate) {
             return $this->normalizeFormTaskCreate($data);
         } elseif ($data instanceof Approval) {
@@ -123,6 +127,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             || FormTaskCreateField::class === $type
             || Comment::class === $type
             || FormTaskField::class === $type
+            || CommentCreate::class === $type
             || FormTaskCreate::class === $type
             || Approval::class === $type
             || File::class === $type
@@ -158,6 +163,8 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             return $this->denormalizeComment($data);
         } elseif (FormTaskField::class === $type) {
             return $this->denormalizeFormTaskField($data);
+        } elseif (CommentCreate::class === $type) {
+            return $this->denormalizeCommentCreate($data);
         } elseif (FormTaskCreate::class === $type) {
             return $this->denormalizeFormTaskCreate($data);
         } elseif (Approval::class === $type) {
@@ -207,6 +214,7 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             FormTaskCreateField::class => true,
             Comment::class => true,
             FormTaskField::class => true,
+            CommentCreate::class => true,
             FormTaskCreate::class => true,
             Approval::class => true,
             File::class => true,
@@ -280,6 +288,13 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             'name' => $object->name,
             'code' => $object->code,
             'value' => $object->value,
+        ];
+    }
+
+    private function normalizeCommentCreate(CommentCreate $object): array
+    {
+        return [
+            'text' => $object->text,
         ];
     }
 
@@ -513,6 +528,16 @@ final class PyrusSerializer implements DenormalizerInterface, NormalizerInterfac
             (string) ($data['name'] ?? ''),
             (string) ($data['code'] ?? ''),
             $data['value'] ?? null,
+        );
+    }
+
+    /**
+     * @psalm-suppress MixedArgumentTypeCoercion
+     */
+    private function denormalizeCommentCreate(array $data): CommentCreate
+    {
+        return new CommentCreate(
+            (string) ($data['text'] ?? ''),
         );
     }
 
